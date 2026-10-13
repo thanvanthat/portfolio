@@ -83,7 +83,7 @@ export function Hero() {
     >
       {/* WebGL world */}
       <motion.div className="absolute inset-0 -z-10" style={{ opacity: fade }}>
-        <Image src="/hero-poster.webp" alt="" fill sizes="100vw" className="object-cover object-right lg:hidden" />
+        <Image src="/hero-terrain.webp" alt="" fill sizes="100vw" className="object-cover object-right lg:hidden" />
         <video
           ref={videoRef}
           poster="/hero-morph-poster.webp"

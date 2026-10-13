@@ -21,8 +21,8 @@ export const timeline: TimelineEntry[] = [
   {
     chapter: "II",
     title: "Worlds",
-    body: "Moved into game development: Unreal Engine 5, Blueprints, levels, materials, MetaHumans and gameplay prototyping.",
-    tags: ["Unreal Engine 5", "Blueprints", "C#"],
+    body: "Moved into game development: Unreal Engine 5, Blueprints, levels, materials and MetaHumans, then shipped Gilli, a 3D physics game with a C# engine.",
+    tags: ["Unreal Engine 5", "Blueprints", "C#", "Gilli"],
   },
   {
     chapter: "III",
@@ -33,7 +33,7 @@ export const timeline: TimelineEntry[] = [
   {
     chapter: "IV",
     title: "Convergence",
-    body: "Now shipping projects where they meet: Fresora and GrantPilot AI are live, alongside adaptive games and interactive web experiences.",
+    body: "Now shipping projects where they meet: Gilli, Fresora and GrantPilot AI are live, alongside adaptive games and interactive web experiences.",
     tags: ["Fresora", "GrantPilot AI", "BrainVerse AI"],
   },
 ];

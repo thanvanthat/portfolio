@@ -61,8 +61,140 @@ export const projects: Project[] = [
     ],
   },
   {
-    slug: "fresora",
+    slug: "gilli",
     number: "02",
+    title: "Gilli",
+    statement: "Tamil Nadu's street game, rebuilt in 3D with real physics.",
+    description:
+      "A browser-based 3D Gilli-Danda (Kitti Pull) game set on a red-earth village maidan. Flick the gilli, strike it in the air and dodge the fielders, alone against the computer or online with up to three friends.",
+    categories: ["game", "web"],
+    type: "3D physics game · Single player & online multiplayer",
+    role: "Game design · C# engine & physics · 3D client · Netcode",
+    engine: "C# (.NET 10) · Three.js",
+    technologies: [
+      "C# / .NET 10",
+      "BEPUphysics v2",
+      "WebAssembly",
+      "ASP.NET Core",
+      "SignalR",
+      "WebRTC",
+      "React 19",
+      "TypeScript",
+      "Three.js",
+      "Vite",
+      "xUnit",
+      "Vercel",
+    ],
+    status: "Live",
+    visual: "gilli",
+    device: "desktop",
+    atmosphere: { accent: "#f08a4b", base: "#120a07", glow: "#6b2410" },
+    overview:
+      "Gilli is the village street game of Tamil Nadu, played on a procedurally built maidan with coconut palms, banyan trees, tiled and thatched houses, a tea kadai, a temple gopuram and paddy fields. The gilli is a real rigid body simulated by BEPUphysics in a C# engine, so every hit, catch, throw, distance and score comes from the simulation. The same engine runs as a server for online rooms and as WebAssembly inside the browser.",
+    problem:
+      "Gilli-Danda is a game many people grew up playing in the street, but it has almost no digital version, and a simple arcade remake loses what makes it fun: how the gilli pops up, spins and rolls.",
+    concept:
+      "Let physics decide everything. The batter flicks and strikes a simulated gilli, the engine measures where it actually stops, and the rules turn that distance into dandas. Fielders can catch it or throw at the danda laid across the pit, exactly like the street game.",
+    responsibilities: [
+      "Designed the rules: toss, innings, 3-miss outs, catches, throws at the danda and a retire limit",
+      "Built the authoritative C# engine with BEPUphysics v2: a kinematic danda swept at 960 Hz against the gilli",
+      "Rules engine that resolves every attempt exactly once and scores floor(distance ÷ 0.75 m) + 1",
+      "Computer players (Easy, Normal, Hard) that bat and field through the same rules and physics",
+      "Three.js client with a procedural Tamil Nadu village, procedural characters, interpolation and ballistic prediction",
+      "Online rooms for 2–4 players: SignalR server, and a peer-to-peer WebRTC mode where the host's browser runs the room",
+      "Compiled the C# engine to WebAssembly so the whole game runs on static Vercel hosting",
+      "65 C# tests, CI, CodeQL scanning and security hardening (rate limits, strict CSP)",
+    ],
+    system: [
+      { label: "Flick", detail: "The batter flicks the gilli up from the pit; the engine applies an impulse to the rigid body." },
+      { label: "Swing", detail: "A kinematic danda capsule sweeps through the BEPU world at 960 Hz." },
+      { label: "Contact", detail: "BEPU's narrow phase reports the real danda–gilli contact and applies the impact once." },
+      { label: "Flight", detail: "The gilli flies, spins, bounces and rolls under gravity and drag until it rests." },
+      { label: "Rules", detail: "Catch, throw at the danda, safe or miss is resolved exactly once and scored." },
+      { label: "Every player", detail: "Clients render 30 Hz snapshots with interpolation and predict the gilli in the air." },
+    ],
+    process: [
+      {
+        heading: "Classic first",
+        body: "Started as a single-file Kitti Pull game to find the rules and the feel. It is still playable as the Classic version.",
+      },
+      {
+        heading: "Physics as the referee",
+        body: "Moved the game into a C# engine with BEPUphysics so distance, catches and danda hits come from a real simulation, covered by physics, rules and room tests.",
+      },
+      {
+        heading: "Play anywhere",
+        body: "Compiled the engine to WebAssembly and added peer-to-peer rooms, so single player and online matches run from a static site with no game server.",
+      },
+    ],
+    result:
+      "Live on Vercel. Single player against the computer, practice and online multiplayer with friends all run in the browser, with nothing to install.",
+    highlights: [
+      { value: "960 Hz", label: "Swing physics" },
+      { value: "2–4", label: "Players online" },
+      { value: "65", label: "C# tests" },
+      { value: "WASM", label: "C# engine in the browser" },
+    ],
+    note: "Screens captured from a single-player match against the computer.",
+    screens: [
+      {
+        src: "/projects/gilli/menu.webp",
+        alt: "Gilli main menu over a 3D Tamil Nadu village with a temple gopuram and a red-earth field",
+        caption: "The village maidan",
+        width: 1600,
+        height: 1000,
+      },
+      {
+        src: "/projects/gilli/batting.webp",
+        alt: "Batter standing at the pit with the danda, ready to flick the gilli",
+        caption: "Batting: flick, then strike",
+        width: 1600,
+        height: 1000,
+      },
+      {
+        src: "/projects/gilli/flight.webp",
+        alt: "The gilli landing past the 20 metre ring while a computer fielder runs after it",
+        caption: "Run it out: the gilli lands at 14.2 m",
+        width: 1600,
+        height: 1000,
+      },
+      {
+        src: "/projects/gilli/safe.webp",
+        alt: "Safe plus 33: 24.42 metres equals 32 dandas plus 1 bonus",
+        caption: "Safe! 24.42 m = 32 dandas + 1",
+        width: 1600,
+        height: 1000,
+      },
+      {
+        src: "/projects/gilli/throw.webp",
+        alt: "Fielder aiming a throw at the danda across the pit with a power and height gauge",
+        caption: "Fielding: throw at the danda",
+        width: 1600,
+        height: 1000,
+      },
+      {
+        src: "/projects/gilli/toss.webp",
+        alt: "The toss: Team A won and chooses to bat or field first",
+        caption: "The toss",
+        width: 1600,
+        height: 1000,
+      },
+      {
+        src: "/projects/gilli/result.webp",
+        alt: "Match result table with points, safe hits, longest hit and how each player got out",
+        caption: "Match result",
+        width: 1600,
+        height: 1000,
+      },
+    ],
+    links: [
+      { label: "Play the game", href: "https://gilli-rho.vercel.app/", kind: "live" },
+      { label: "Source code", href: "https://github.com/thanvanthat/Gilli", kind: "source" },
+    ],
+  },
+  {
+    slug: "fresora",
+    number: "03",
     title: "Fresora",
     statement: "Scan food. Use it before it becomes waste.",
     description:
@@ -189,7 +321,7 @@ export const projects: Project[] = [
   },
   {
     slug: "grantpilot-ai",
-    number: "03",
+    number: "04",
     title: "GrantPilot AI",
     statement: "From government tender to review-ready bid.",
     description:
@@ -320,7 +452,7 @@ export const projects: Project[] = [
   },
   {
     slug: "echo-protocol-escape",
-    number: "04",
+    number: "05",
     title: "Echo Protocol: Escape",
     statement: "Third-person action-adventure prototype.",
     description:
@@ -366,7 +498,7 @@ export const projects: Project[] = [
   },
   {
     slug: "eco-dash",
-    number: "05",
+    number: "06",
     title: "Eco Dash",
     statement: "A sustainability-focused endless runner.",
     description:
@@ -410,7 +542,7 @@ export const projects: Project[] = [
   },
   {
     slug: "game-dev-event-platform",
-    number: "06",
+    number: "07",
     title: "Game Dev Event Platform",
     statement: "A home base for game development events.",
     description:
@@ -462,7 +594,7 @@ export const getNextProject = (slug: string) => {
 };
 
 /** Order of the Game Development pinned sequence. */
-export const gameProjects = ["brainverse-ai", "echo-protocol-escape", "eco-dash", "game-dev-event-platform"]
+export const gameProjects = ["gilli", "brainverse-ai", "echo-protocol-escape", "eco-dash", "game-dev-event-platform"]
   .map((slug) => getProject(slug))
   .filter((p): p is Project => Boolean(p));
 
