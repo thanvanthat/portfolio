@@ -10,6 +10,7 @@ import { GilliFeature } from "@/components/sections/GilliFeature";
 import { Hero } from "@/components/sections/Hero";
 import { ProcessSection } from "@/components/sections/ProcessSection";
 import { ProjectShowcase } from "@/components/sections/ProjectShowcase";
+import { SnakesFeature } from "@/components/sections/SnakesFeature";
 import { SkillsSection } from "@/components/sections/SkillsSection";
 import { UnrealSection } from "@/components/sections/UnrealSection";
 
@@ -22,6 +23,7 @@ export default function HomePage() {
       <ProjectShowcase />
       <GameDevSection />
       <GilliFeature />
+      <SnakesFeature />
       <UnrealSection />
       <AISection />
       <FresoraFeature />

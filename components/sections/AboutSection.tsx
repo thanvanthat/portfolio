@@ -28,7 +28,7 @@ export function AboutSection() {
           <FadeIn className="lg:col-span-4 lg:col-start-2">
             <p className="label text-ash">Currently</p>
             <p className="mt-3 text-sm leading-relaxed text-bone/70">
-              CSE student · Shipped Gilli, Fresora and GrantPilot AI · Prototyping in Unreal Engine 5
+              CSE student · Shipped Gilli, Snakes & Ladders 3D, Fresora and GrantPilot AI · Prototyping in Unreal Engine 5
             </p>
           </FadeIn>
           <FadeIn className="lg:col-span-6" delay={0.1}>

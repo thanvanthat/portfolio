@@ -3,7 +3,8 @@ export type ProjectCategory = "game" | "ai" | "web";
 export type ProjectStatus = "Live" | "In development" | "Prototype" | "Concept prototype" | "Completed" | "Exploring";
 
 /** Identifies which procedural artwork renders for a project. */
-export type ProjectVisualKey = "brainverse" | "gilli" | "fresora" | "grantpilot" | "echo" | "ecodash" | "eventplatform";
+export type ProjectVisualKey =
+  "brainverse" | "gilli" | "snakes" | "fresora" | "grantpilot" | "echo" | "ecodash" | "eventplatform";
 
 export interface ProjectAtmosphere {
   /** Accent color used sparingly for highlights, states and hover. */

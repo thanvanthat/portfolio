@@ -193,8 +193,127 @@ export const projects: Project[] = [
     ],
   },
   {
-    slug: "fresora",
+    slug: "snakes-and-ladders-3d",
     number: "03",
+    title: "Snakes & Ladders 3D",
+    statement: "A board game where the snakes actually bite.",
+    description:
+      "A complete 3D Snakes & Ladders tabletop for the browser, with animated human characters, snakes that strike, ladders you climb rung by rung and a real 3D die. Play with 2–4 people on one device or against the computer.",
+    categories: ["game", "web"],
+    type: "3D tabletop game · Local multiplayer & vs computer",
+    role: "Game design · 3D scene & animation · Rules engine · UI",
+    engine: "React Three Fiber · Three.js",
+    technologies: [
+      "React 18",
+      "TypeScript (strict)",
+      "Three.js",
+      "React Three Fiber",
+      "Drei",
+      "Vite",
+      "Tailwind CSS",
+      "Framer Motion",
+      "Web Audio",
+      "Vitest",
+      "Vercel",
+    ],
+    status: "Live",
+    visual: "snakes",
+    device: "desktop",
+    atmosphere: { accent: "#f6b93b", base: "#0e0d0b", glow: "#5c3a12" },
+    overview:
+      "Snakes & Ladders 3D turns the family board game into a small 3D world: a bevelled 100-square board on a wooden table, six procedurally modelled characters, snakes with jaws, fangs and forked tongues, and a die that tumbles before landing. Everything is generated in code, so it runs fully offline with no backend and no downloaded assets.",
+    problem:
+      "Most digital versions of Snakes & Ladders move a token from one square to another and stop there. The moments everyone remembers from the real game, climbing a ladder and getting caught by a snake, are skipped.",
+    concept:
+      "Keep the traditional rules exact and spend the effort on those two moments. Characters walk the board, climb ladders rung by rung and get bitten, then slide down the snake's real body curve, while a strict turn engine keeps every animation in step with the rules.",
+    responsibilities: [
+      "Rules engine as pure functions: exact-finish rule, optional roll-a-1-to-start and six-rolls-again house rules",
+      "Turn state machine where every stage waits for its animation, so turns cannot overlap or corrupt a restart",
+      "Procedural humanoid rig with idle, walk, climb, recoil, slide and celebrate animations, in six looks",
+      "Snakes on Catmull-Rom curves with procedural skin, hinged jaw and a full bite sequence",
+      "3D board in a single instanced draw call, ladders, die physics-style tumble and confetti",
+      "Computer opponent that uses the same die and rules",
+      "UI: home screen with live 3D preview, setup, move history, pause, settings and victory screen",
+      "Procedural Web Audio sound, saved progress, keyboard controls, reduced-motion support and 92 tests",
+    ],
+    system: [
+      {
+        label: "Roll",
+        detail: "A fair die (crypto RNG with rejection sampling) decides the value; the 3D die tumbles and settles on it.",
+      },
+      { label: "Plan", detail: "The rules engine works out the whole turn up front: move, ladder, snake, overshoot or win." },
+      { label: "Walk", detail: "The character walks square by square along the board's serpentine path." },
+      { label: "Ladder or snake", detail: "Climb rung by rung to the top, or get bitten and slide down the snake's body." },
+      { label: "Next turn", detail: "Only when every animation reports back does the next player roll." },
+    ],
+    process: [
+      {
+        heading: "Rules first",
+        body: "Built the board layout, rules and turn engine as plain TypeScript with tests before drawing anything.",
+      },
+      {
+        heading: "Characters and creatures",
+        body: "Modelled and animated the characters, snakes and ladders procedurally, with shared curves so rendering and movement always match.",
+      },
+      {
+        heading: "Polish and safety",
+        body: "Added sound, saved games, settings, accessibility and checks so stale or duplicate animation callbacks are ignored.",
+      },
+    ],
+    result:
+      "Live on Vercel and deployed automatically from GitHub on every push. It runs fully offline in the browser with nothing to install.",
+    highlights: [
+      { value: "100", label: "Squares, one draw call" },
+      { value: "6", label: "Animated characters" },
+      { value: "8", label: "Steps in a snake bite" },
+      { value: "92", label: "Tests" },
+    ],
+    note: "Screens shown in order, captured from one game against the computer.",
+    screens: [
+      {
+        src: "/projects/snakes/1-home.webp",
+        alt: "Snakes and Ladders 3D home screen over a live 3D preview of the board",
+        caption: "1 · Home: the board in 3D",
+        width: 1600,
+        height: 1000,
+      },
+      {
+        src: "/projects/snakes/2-setup.webp",
+        alt: "New game setup with Vs computer mode, house rules and character colours",
+        caption: "2 · New game: mode, house rules, characters",
+        width: 1600,
+        height: 1000,
+      },
+      {
+        src: "/projects/snakes/3-first-turn.webp",
+        alt: "Game screen at the first turn with the dice panel and empty move history",
+        caption: "3 · First turn: roll the die",
+        width: 1600,
+        height: 1000,
+      },
+      {
+        src: "/projects/snakes/4-ladder.webp",
+        alt: "Ava climbed a ladder from square 1 up to square 14, shown in the move history",
+        caption: "4 · Ladder: up from 1 to 14",
+        width: 1600,
+        height: 1000,
+      },
+      {
+        src: "/projects/snakes/5-race.webp",
+        alt: "Both players on the board, Ava on 14 next to the snake on 16 and Leo on 3",
+        caption: "5 · The race: Ava next to the snake on 16",
+        width: 1600,
+        height: 1000,
+      },
+    ],
+    links: [
+      { label: "Play the game", href: "https://snakes-and-ladders-3d-psi.vercel.app/", kind: "live" },
+      { label: "Source code", href: "https://github.com/thanvanthat/snake-and-ladder-", kind: "source" },
+    ],
+  },
+  {
+    slug: "fresora",
+    number: "04",
     title: "Fresora",
     statement: "Scan food. Use it before it becomes waste.",
     description:
@@ -321,7 +440,7 @@ export const projects: Project[] = [
   },
   {
     slug: "grantpilot-ai",
-    number: "04",
+    number: "05",
     title: "GrantPilot AI",
     statement: "From government tender to review-ready bid.",
     description:
@@ -452,7 +571,7 @@ export const projects: Project[] = [
   },
   {
     slug: "echo-protocol-escape",
-    number: "05",
+    number: "06",
     title: "Echo Protocol: Escape",
     statement: "Third-person action-adventure prototype.",
     description:
@@ -498,7 +617,7 @@ export const projects: Project[] = [
   },
   {
     slug: "eco-dash",
-    number: "06",
+    number: "07",
     title: "Eco Dash",
     statement: "A sustainability-focused endless runner.",
     description:
@@ -542,7 +661,7 @@ export const projects: Project[] = [
   },
   {
     slug: "game-dev-event-platform",
-    number: "07",
+    number: "08",
     title: "Game Dev Event Platform",
     statement: "A home base for game development events.",
     description:
@@ -594,7 +713,14 @@ export const getNextProject = (slug: string) => {
 };
 
 /** Order of the Game Development pinned sequence. */
-export const gameProjects = ["gilli", "brainverse-ai", "echo-protocol-escape", "eco-dash", "game-dev-event-platform"]
+export const gameProjects = [
+  "gilli",
+  "snakes-and-ladders-3d",
+  "brainverse-ai",
+  "echo-protocol-escape",
+  "eco-dash",
+  "game-dev-event-platform",
+]
   .map((slug) => getProject(slug))
   .filter((p): p is Project => Boolean(p));
 
