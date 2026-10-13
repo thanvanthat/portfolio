@@ -305,6 +305,13 @@ export const projects: Project[] = [
         width: 1600,
         height: 1000,
       },
+      {
+        src: "/projects/snakes/6-midgame.webp",
+        alt: "Turn 15: Ava on square 67 and Leo on 35, with the move history listing Ava's ladder climbs to 31, 44 and 67",
+        caption: "6 · Mid-game: Ava up three ladders to 67",
+        width: 1600,
+        height: 1000,
+      },
     ],
     links: [
       { label: "Play the game", href: "https://snakes-and-ladders-3d-psi.vercel.app/", kind: "live" },
