@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { allTags, publishedPosts } from "@/data/posts";
+import Link from "next/link";
+import { blog } from "@/data/blog";
+import { allTags, postSummaries } from "@/data/posts";
 import { site } from "@/data/site";
-import { BlogIndex } from "@/components/blog/BlogIndex";
-import { PostCard } from "@/components/blog/PostCard";
-import { RevealText } from "@/components/ui/RevealText";
-import { SectionLabel } from "@/components/ui/SectionLabel";
+import { BlogHero } from "@/components/blog/BlogHero";
+import { PostTimeline } from "@/components/blog/PostTimeline";
 
 export const metadata: Metadata = {
   title: "Blog",
@@ -15,27 +15,39 @@ export const metadata: Metadata = {
 
 export default function BlogPage() {
   return (
-    <section className="gutter pb-24 pt-32 lg:pt-44">
-      <SectionLabel index="✎" title="Journal" />
-      <RevealText
-        as="h1"
-        immediate
-        delay={0.2}
-        lines={["Notes from", "the workshop."]}
-        className="display mt-8 text-[clamp(3.5rem,11vw,11rem)] text-bone"
-      />
-      <div className="mt-10 flex flex-wrap items-end justify-between gap-6 pb-16">
-        <p className="max-w-[52ch] text-lg text-bone/70">
-          Devlogs, experiments and lessons from building games and AI systems — the parts a portfolio leaves out.
-        </p>
-        <a href="/blog/feed.xml" className="label border-b border-bone/40 pb-1 text-ash transition-colors hover-fine:text-bone">
-          RSS feed ↗
-        </a>
-      </div>
-      <BlogIndex
-        tags={allTags}
-        items={publishedPosts.map((post) => ({ post: { slug: post.slug, tags: post.tags }, card: <PostCard post={post} /> }))}
-      />
-    </section>
+    <>
+      <BlogHero title={blog.title}>
+        <p className="font-serif text-[clamp(1rem,1.5vw,1.25rem)] font-medium leading-snug">{blog.intro}</p>
+      </BlogHero>
+
+      <section aria-labelledby="posts-heading" className="flex justify-end">
+        <div className="w-full px-6 pb-24 pt-[18vh] sm:px-10 lg:w-[min(720px,56vw)] lg:pl-[min(180px,10vw)] lg:pr-[clamp(48px,6vw,96px)]">
+          <h2 id="posts-heading" className="font-hand text-[clamp(2.25rem,4vw,3.5rem)] leading-none">
+            {blog.listHeading}
+          </h2>
+          <p className="mb-8 mt-3 text-[10px] uppercase tracking-[0.26em] text-[rgb(244_241_234/0.55)]">
+            {postSummaries.length} {postSummaries.length === 1 ? "entry" : "entries"}
+          </p>
+          <PostTimeline posts={postSummaries} tags={allTags} />
+
+          <footer className="mt-28 flex flex-wrap items-center justify-between gap-4 border-t border-[rgb(244_241_234/0.14)] pt-6 text-[10px] uppercase tracking-[0.26em] text-[rgb(244_241_234/0.55)]">
+            <span>
+              © {site.year} {site.name}
+            </span>
+            <span className="flex gap-5">
+              <Link href="/" className="hover:text-[#f4f1ea]">
+                Portfolio
+              </Link>
+              <a href={`mailto:${site.email}`} className="hover:text-[#f4f1ea]">
+                Email
+              </a>
+              <a href="/blog/feed.xml" className="hover:text-[#f4f1ea]">
+                RSS
+              </a>
+            </span>
+          </footer>
+        </div>
+      </section>
+    </>
   );
 }

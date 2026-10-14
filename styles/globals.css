@@ -13,10 +13,16 @@
   --color-line: rgb(236 235 230 / 0.1);
   --color-ai: #9fd4ff;
   --color-ember: #ff6a3d;
+  /* Blog atmosphere */
+  --color-sage: #a3ae8a;
+  --color-moss: #0a0e16;
+  --color-peach: #ffd9b3;
 
   --font-display: var(--font-archivo), "Arial Narrow", sans-serif;
   --font-sans: var(--font-inter-tight), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+  --font-hand: var(--font-mansalva), cursive;
+  --font-serif: var(--font-cormorant), "Iowan Old Style", Georgia, serif;
 
   --ease-cine: cubic-bezier(0.76, 0, 0.24, 1);
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
@@ -235,4 +241,63 @@
 
 html[data-intro="skip"] .intro-loader {
   display: none;
+}
+
+/* ---------- Blog: framed 3D stage (after sen-3d-resume) ---------- */
+.blog-frame-meta {
+  font-size: clamp(9px, 0.9vw, 11px);
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  line-height: 1.6;
+  color: rgb(244 241 234 / 0.6);
+  text-shadow: 0 1px 12px rgb(10 14 22 / 0.25);
+}
+
+.blog-scroll-dot {
+  animation: blog-cue-dot 1.9s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+@keyframes blog-cue-dot {
+  0% {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+  25%,
+  75% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(44px);
+    opacity: 0;
+  }
+}
+
+.blog-intro {
+  animation: blog-fade-down 1.8s var(--ease-out-expo) both;
+}
+@keyframes blog-fade-down {
+  from {
+    opacity: 0;
+    transform: translateY(-18px);
+    filter: blur(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+/* Frosted right rail: soft left edge, blur of the scene behind */
+.blog-glass-rail {
+  background: rgb(10 14 22 / 0.2);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  -webkit-mask: linear-gradient(to right, transparent 0%, #000 40%);
+  mask: linear-gradient(to right, transparent 0%, #000 40%);
+}
+@media (max-width: 1023px) {
+  .blog-glass-rail {
+    -webkit-mask: none;
+    mask: none;
+  }
 }

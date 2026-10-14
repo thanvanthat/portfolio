@@ -25,10 +25,22 @@ blocks (`p`, `h2`, `h3`, `list`, `quote`, `code`, `callout`; see `PostBlock` in 
 date automatically and appear on `/blog`, the home page "Writing" section, the sitemap and the RSS feed.
 Set `draft: true` to hide a post while you work on it.
 
+### Blog look
+
+The blog has its own framed 3D stage (`app/blog/layout.tsx`): a fixed React Three Fiber scene behind the content
+where scrolling drives the camera, a clay game controller that turns toward the cursor, a hairline frame with
+corner metadata, a handwritten title (Mansalva) and an upright serif (Cormorant Upright). Copy, corner labels and
+the scene model live in `data/blog.ts` — export your own character from Blender as a `.glb` into `/public/models`
+and set `model: "/models/me.glb"` to replace the controller.
+
+The layout and mood are adapted from [dayinji/sen-3d-resume](https://github.com/dayinji/sen-3d-resume) (code under
+MIT). None of its personal content or assets (name, character model, résumé, images) are used.
+
 ## Structure
 
 ```
-app/                 routes: home, /projects/[slug] case studies (each with its own share image),
+app/                 (site)/ holds the portfolio routes and chrome; blog/ has its own layout
+                     routes: home, /projects/[slug] case studies (each with its own share image),
                      /blog + /blog/[slug] posts, /blog/feed.xml (RSS), OG image, sitemap, robots
 components/
   layout/            Navbar, Footer, Loader, CursorInteraction, PageTransition

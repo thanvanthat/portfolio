@@ -1,4 +1,5 @@
-import type { Post, PostBlock } from "@/lib/types";
+import type { Post, PostBlock, PostSummary } from "@/lib/types";
+import { readingTime } from "@/lib/utils";
 
 /**
  * Blog posts. Order here does not matter — the helpers below sort by date.
@@ -174,3 +175,13 @@ export function postText(body: PostBlock[]) {
 }
 
 export const allTags = [...new Set(publishedPosts.flatMap((p) => p.tags))].sort();
+
+/** Body-less listing data, safe to hand to client components. */
+export const postSummaries: PostSummary[] = publishedPosts.map(({ slug, title, excerpt, date, tags, body }) => ({
+  slug,
+  title,
+  excerpt,
+  date,
+  tags,
+  minutes: readingTime(postText(body)),
+}));

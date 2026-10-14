@@ -138,3 +138,13 @@ export interface Post {
   draft?: boolean;
   body: PostBlock[];
 }
+
+/** Lightweight post data for client-side listings (no body). */
+export interface PostSummary {
+  slug: string;
+  title: string;
+  excerpt: string;
+  date: string;
+  tags: string[];
+  minutes: number;
+}

@@ -1,13 +1,10 @@
 import type { Metadata, Viewport } from "next";
-import { Archivo, Inter_Tight, JetBrains_Mono } from "next/font/google";
+import { Archivo, Cormorant_Upright, Inter_Tight, JetBrains_Mono, Mansalva } from "next/font/google";
 import type { ReactNode } from "react";
 import { site, socials } from "@/data/site";
 import { CursorInteraction } from "@/components/layout/CursorInteraction";
-import { Footer } from "@/components/layout/Footer";
-import { Loader } from "@/components/layout/Loader";
 import { MotionProvider } from "@/components/layout/MotionProvider";
 import { INTRO_KEY } from "@/lib/constants";
-import { Navbar } from "@/components/layout/Navbar";
 import "@/styles/globals.css";
 
 const archivo = Archivo({
@@ -20,6 +17,21 @@ const archivo = Archivo({
 const interTight = Inter_Tight({
   subsets: ["latin"],
   variable: "--font-inter-tight",
+  display: "swap",
+});
+
+// Blog: handwritten titles and an upright serif, after the sen-3d-resume look
+const mansalva = Mansalva({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-mansalva",
+  display: "swap",
+});
+
+const cormorant = Cormorant_Upright({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-cormorant",
   display: "swap",
 });
 
@@ -85,7 +97,11 @@ const jsonLd = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${archivo.variable} ${interTight.variable} ${jetbrains.variable}`}>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${archivo.variable} ${interTight.variable} ${jetbrains.variable} ${mansalva.variable} ${cormorant.variable}`}
+    >
       <body className="grain">
         <a
           href="#main"
@@ -108,10 +124,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
         <MotionProvider>
-          <Loader />
-          <Navbar />
-          <main id="main">{children}</main>
-          <Footer />
+          {children}
           <CursorInteraction />
         </MotionProvider>
       </body>
