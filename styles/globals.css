@@ -236,3 +236,119 @@
 html[data-intro="skip"] .intro-loader {
   display: none;
 }
+
+/* ------------------------------------------------------------------ Homepage */
+
+.font-hand {
+  font-family: var(--font-hand), cursive;
+  font-weight: 400;
+}
+
+.font-serif-up {
+  font-family: var(--font-serif-up), Georgia, serif;
+  font-weight: 500;
+}
+
+/* Shows before (or without) WebGL: the same sky the 3D scene paints */
+.home-sky {
+  background: linear-gradient(180deg, #5f8580 0%, #a9b8a0 48%, #e8d9bb 100%);
+}
+
+.home-chrome {
+  --m: clamp(12px, 2.4vh, 28px);
+  color: rgb(247 242 232 / 0.75);
+}
+
+.home-frame {
+  position: absolute;
+  inset: var(--m);
+  border: 1px solid rgb(247 242 232 / 0.22);
+}
+
+.home-mark {
+  position: absolute;
+  font: 300 14px/1 var(--font-mono);
+  transform: translate(-50%, -50%);
+}
+.home-mark.tl { top: var(--m); left: var(--m); }
+.home-mark.tr { top: var(--m); left: calc(100% - var(--m)); }
+.home-mark.bl { top: calc(100% - var(--m)); left: var(--m); }
+.home-mark.br { top: calc(100% - var(--m)); left: calc(100% - var(--m)); }
+
+.home-meta {
+  position: absolute;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+.home-meta.bl { bottom: calc(var(--m) + 14px); left: calc(var(--m) + 18px); }
+.home-meta.br { bottom: calc(var(--m) + 14px); right: calc(var(--m) + 18px); }
+.home-meta.side {
+  top: 50%;
+  right: calc(var(--m) + 6px);
+  writing-mode: vertical-rl;
+  transform: translateY(-50%);
+}
+
+@media (max-width: 640px) {
+  .home-meta.side,
+  .home-meta.br { display: none; }
+}
+
+/* Heavier, moving film grain for the homepage, layered over the scene */
+.film-grain {
+  position: fixed;
+  inset: -50%;
+  z-index: 95;
+  pointer-events: none;
+  opacity: 0.16;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  animation: grain-shift 0.9s steps(6) infinite;
+}
+
+@keyframes grain-shift {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(-6%, 4%); }
+  40% { transform: translate(5%, -7%); }
+  60% { transform: translate(-3%, 8%); }
+  80% { transform: translate(7%, 2%); }
+  100% { transform: translate(0, 0); }
+}
+
+.scroll-dot {
+  animation: scroll-dot 1.8s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+
+@keyframes scroll-dot {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(400%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .film-grain,
+  .scroll-dot { animation: none; }
+}
+
+.journey-rail {
+  background: linear-gradient(90deg, rgb(12 16 22 / 0) 0%, rgb(12 16 22 / 0.28) 22%, rgb(12 16 22 / 0.38) 100%);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.journey-line::before {
+  content: "";
+  position: absolute;
+  top: 0.5rem;
+  bottom: 0;
+  left: 0;
+  width: 1px;
+  background: linear-gradient(180deg, rgb(247 242 232 / 0.5), rgb(247 242 232 / 0));
+}
+
+/* The global footer sits on the scene on the homepage, so give it a backing */
+body:has(.home-root) footer {
+  background: rgb(10 13 18 / 0.88);
+  backdrop-filter: blur(12px);
+}

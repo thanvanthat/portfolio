@@ -22,11 +22,8 @@ export const socials: SocialLink[] = [
 
 export const navItems: NavItem[] = [
   { id: "home", label: "Home" },
-  { id: "about", label: "About" },
-  { id: "projects", label: "Projects" },
-  { id: "game-dev", label: "Game Dev" },
-  { id: "ai", label: "AI" },
-  { id: "skills", label: "Skills" },
+  { id: "journey", label: "Journey" },
+  { id: "works", label: "Works" },
   { id: "contact", label: "Contact" },
 ];
 
