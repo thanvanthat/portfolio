@@ -1,14 +1,15 @@
 "use client";
 
-import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import type { Project } from "@/lib/types";
 import { ProjectArt } from "@/components/visuals/ProjectArt";
+import { usePrefersReducedMotion } from "@/lib/hooks";
 
 /** Full-bleed hero visual that un-clips and settles as it scrolls into view. */
 export function CaseHeroVisual({ project }: { project: Project }) {
   const ref = useRef<HTMLDivElement>(null);
-  const reduce = useReducedMotion();
+  const reduce = usePrefersReducedMotion();
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
   const inset = useTransform(scrollYProgress, [0, 0.45], reduce ? ["0%", "0%"] : ["6%", "0%"]);
   const clipPath = useTransform(inset, (v) => `inset(0 ${v} 0 ${v})`);

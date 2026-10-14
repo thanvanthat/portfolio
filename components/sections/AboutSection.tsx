@@ -1,15 +1,16 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 import { aboutIntro, aboutStatements } from "@/data/content";
 import { easeOutExpo } from "@/lib/utils";
 import { FadeIn } from "@/components/ui/FadeIn";
 import { Marquee } from "@/components/ui/Marquee";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { WordReveal } from "@/components/ui/WordReveal";
+import { usePrefersReducedMotion } from "@/lib/hooks";
 
 export function AboutSection() {
-  const reduce = useReducedMotion();
+  const reduce = usePrefersReducedMotion();
 
   return (
     <section id="about" aria-labelledby="about-heading" className="relative bg-ink pt-32 lg:pt-48">
@@ -27,7 +28,7 @@ export function AboutSection() {
           <FadeIn className="lg:col-span-4 lg:col-start-2">
             <p className="label text-ash">Currently</p>
             <p className="mt-3 text-sm leading-relaxed text-bone/70">
-              CSE student · Shipped Fresora and GrantPilot AI · Prototyping in Unreal Engine 5
+              CSE student · Shipped Gilli, Snakes & Ladders 3D, Fresora and GrantPilot AI · Prototyping in Unreal Engine 5
             </p>
           </FadeIn>
           <FadeIn className="lg:col-span-6" delay={0.1}>
@@ -81,7 +82,7 @@ export function AboutSection() {
           "Generative AI",
           "Interactive Experiences",
         ]}
-        className="display-wide py-10 text-[clamp(1.5rem,3vw,2.5rem)] text-bone/15"
+        className="display-wide py-10 text-[clamp(1.5rem,3vw,2.5rem)] text-bone/45"
         duration={50}
       />
     </section>

@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { aiPipeline, researchThreads } from "@/data/content";
 import { AIProject } from "@/components/projects/AIProject";
@@ -9,10 +9,11 @@ import { FadeIn } from "@/components/ui/FadeIn";
 import { Pipeline } from "@/components/ui/Pipeline";
 import { RevealText } from "@/components/ui/RevealText";
 import { SectionLabel } from "@/components/ui/SectionLabel";
+import { usePrefersReducedMotion } from "@/lib/hooks";
 
 export function AISection() {
   const ref = useRef<HTMLDivElement>(null);
-  const reduce = useReducedMotion();
+  const reduce = usePrefersReducedMotion();
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
   const y = useTransform(scrollYProgress, [0, 1], reduce ? ["0%", "0%"] : ["-10%", "10%"]);
 

@@ -24,7 +24,7 @@ export function Loader() {
     }
 
     const start = performance.now();
-    const duration = 1300;
+    const duration = 800;
     let raf = 0;
     const tick = (now: number) => {
       const t = Math.min(1, (now - start) / duration);
@@ -34,7 +34,7 @@ export function Loader() {
         try {
           sessionStorage.setItem(KEY, "1");
         } catch {}
-        setTimeout(() => setShow(false), 180);
+        setTimeout(() => setShow(false), 100);
       }
     };
     raf = requestAnimationFrame(tick);
@@ -51,7 +51,7 @@ export function Loader() {
           className="intro-loader fixed inset-0 z-[120] flex flex-col justify-between bg-ink p-[var(--gutter)] text-bone"
           exit={{ clipPath: "inset(0 0 100% 0)" }}
           initial={{ clipPath: "inset(0 0 0% 0)" }}
-          transition={{ duration: 0.9, ease: easeCine }}
+          transition={{ duration: 0.7, ease: easeCine }}
         >
           <div className="label flex justify-between text-ash">
             <span>{site.name}</span>

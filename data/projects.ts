@@ -61,8 +61,266 @@ export const projects: Project[] = [
     ],
   },
   {
-    slug: "fresora",
+    slug: "gilli",
     number: "02",
+    title: "Gilli",
+    statement: "Tamil Nadu's street game, rebuilt in 3D with real physics.",
+    description:
+      "A browser-based 3D Gilli-Danda (Kitti Pull) game set on a red-earth village maidan. Flick the gilli, strike it in the air and dodge the fielders, alone against the computer or online with up to three friends.",
+    categories: ["game", "web"],
+    type: "3D physics game · Single player & online multiplayer",
+    role: "Game design · C# engine & physics · 3D client · Netcode",
+    engine: "C# (.NET 10) · Three.js",
+    technologies: [
+      "C# / .NET 10",
+      "BEPUphysics v2",
+      "WebAssembly",
+      "ASP.NET Core",
+      "SignalR",
+      "WebRTC",
+      "React 19",
+      "TypeScript",
+      "Three.js",
+      "Vite",
+      "xUnit",
+      "Vercel",
+    ],
+    status: "Live",
+    visual: "gilli",
+    device: "desktop",
+    atmosphere: { accent: "#f08a4b", base: "#120a07", glow: "#6b2410" },
+    overview:
+      "Gilli is the village street game of Tamil Nadu, played on a procedurally built maidan with coconut palms, banyan trees, tiled and thatched houses, a tea kadai, a temple gopuram and paddy fields. The gilli is a real rigid body simulated by BEPUphysics in a C# engine, so every hit, catch, throw, distance and score comes from the simulation. The same engine runs as a server for online rooms and as WebAssembly inside the browser.",
+    problem:
+      "Gilli-Danda is a game many people grew up playing in the street, but it has almost no digital version, and a simple arcade remake loses what makes it fun: how the gilli pops up, spins and rolls.",
+    concept:
+      "Let physics decide everything. The batter flicks and strikes a simulated gilli, the engine measures where it actually stops, and the rules turn that distance into dandas. Fielders can catch it or throw at the danda laid across the pit, exactly like the street game.",
+    responsibilities: [
+      "Designed the rules: toss, innings, 3-miss outs, catches, throws at the danda and a retire limit",
+      "Built the authoritative C# engine with BEPUphysics v2: a kinematic danda swept at 960 Hz against the gilli",
+      "Rules engine that resolves every attempt exactly once and scores floor(distance ÷ 0.75 m) + 1",
+      "Computer players (Easy, Normal, Hard) that bat and field through the same rules and physics",
+      "Three.js client with a procedural Tamil Nadu village, procedural characters, interpolation and ballistic prediction",
+      "Online rooms for 2–4 players: SignalR server, and a peer-to-peer WebRTC mode where the host's browser runs the room",
+      "Compiled the C# engine to WebAssembly so the whole game runs on static Vercel hosting",
+      "65 C# tests, CI, CodeQL scanning and security hardening (rate limits, strict CSP)",
+    ],
+    system: [
+      { label: "Flick", detail: "The batter flicks the gilli up from the pit; the engine applies an impulse to the rigid body." },
+      { label: "Swing", detail: "A kinematic danda capsule sweeps through the BEPU world at 960 Hz." },
+      { label: "Contact", detail: "BEPU's narrow phase reports the real danda–gilli contact and applies the impact once." },
+      { label: "Flight", detail: "The gilli flies, spins, bounces and rolls under gravity and drag until it rests." },
+      { label: "Rules", detail: "Catch, throw at the danda, safe or miss is resolved exactly once and scored." },
+      { label: "Every player", detail: "Clients render 30 Hz snapshots with interpolation and predict the gilli in the air." },
+    ],
+    process: [
+      {
+        heading: "Classic first",
+        body: "Started as a single-file Kitti Pull game to find the rules and the feel. It is still playable as the Classic version.",
+      },
+      {
+        heading: "Physics as the referee",
+        body: "Moved the game into a C# engine with BEPUphysics so distance, catches and danda hits come from a real simulation, covered by physics, rules and room tests.",
+      },
+      {
+        heading: "Play anywhere",
+        body: "Compiled the engine to WebAssembly and added peer-to-peer rooms, so single player and online matches run from a static site with no game server.",
+      },
+    ],
+    result:
+      "Live on Vercel. Single player against the computer, practice and online multiplayer with friends all run in the browser, with nothing to install.",
+    highlights: [
+      { value: "960 Hz", label: "Swing physics" },
+      { value: "2–4", label: "Players online" },
+      { value: "65", label: "C# tests" },
+      { value: "WASM", label: "C# engine in the browser" },
+    ],
+    note: "Screens captured from a single-player match against the computer.",
+    screens: [
+      {
+        src: "/projects/gilli/menu.webp",
+        alt: "Gilli main menu over a 3D Tamil Nadu village with a temple gopuram and a red-earth field",
+        caption: "The village maidan",
+        width: 1600,
+        height: 1000,
+      },
+      {
+        src: "/projects/gilli/batting.webp",
+        alt: "Batter standing at the pit with the danda, ready to flick the gilli",
+        caption: "Batting: flick, then strike",
+        width: 1600,
+        height: 1000,
+      },
+      {
+        src: "/projects/gilli/flight.webp",
+        alt: "The gilli landing past the 20 metre ring while a computer fielder runs after it",
+        caption: "Run it out: the gilli lands at 14.2 m",
+        width: 1600,
+        height: 1000,
+      },
+      {
+        src: "/projects/gilli/safe.webp",
+        alt: "Safe plus 33: 24.42 metres equals 32 dandas plus 1 bonus",
+        caption: "Safe! 24.42 m = 32 dandas + 1",
+        width: 1600,
+        height: 1000,
+      },
+      {
+        src: "/projects/gilli/throw.webp",
+        alt: "Fielder aiming a throw at the danda across the pit with a power and height gauge",
+        caption: "Fielding: throw at the danda",
+        width: 1600,
+        height: 1000,
+      },
+      {
+        src: "/projects/gilli/toss.webp",
+        alt: "The toss: Team A won and chooses to bat or field first",
+        caption: "The toss",
+        width: 1600,
+        height: 1000,
+      },
+      {
+        src: "/projects/gilli/result.webp",
+        alt: "Match result table with points, safe hits, longest hit and how each player got out",
+        caption: "Match result",
+        width: 1600,
+        height: 1000,
+      },
+    ],
+    links: [
+      { label: "Play the game", href: "https://gilli-rho.vercel.app/", kind: "live" },
+      { label: "Source code", href: "https://github.com/thanvanthat/Gilli", kind: "source" },
+    ],
+  },
+  {
+    slug: "snakes-and-ladders-3d",
+    number: "03",
+    title: "Snakes & Ladders 3D",
+    statement: "A board game where the snakes actually bite.",
+    description:
+      "A complete 3D Snakes & Ladders tabletop for the browser, with animated human characters, snakes that strike, ladders you climb rung by rung and a real 3D die. Play with 2–4 people on one device or against the computer.",
+    categories: ["game", "web"],
+    type: "3D tabletop game · Local multiplayer & vs computer",
+    role: "Game design · 3D scene & animation · Rules engine · UI",
+    engine: "React Three Fiber · Three.js",
+    technologies: [
+      "React 18",
+      "TypeScript (strict)",
+      "Three.js",
+      "React Three Fiber",
+      "Drei",
+      "Vite",
+      "Tailwind CSS",
+      "Framer Motion",
+      "Web Audio",
+      "Vitest",
+      "Vercel",
+    ],
+    status: "Live",
+    visual: "snakes",
+    device: "desktop",
+    atmosphere: { accent: "#f6b93b", base: "#0e0d0b", glow: "#5c3a12" },
+    overview:
+      "Snakes & Ladders 3D turns the family board game into a small 3D world: a bevelled 100-square board on a wooden table, six procedurally modelled characters, snakes with jaws, fangs and forked tongues, and a die that tumbles before landing. Everything is generated in code, so it runs fully offline with no backend and no downloaded assets.",
+    problem:
+      "Most digital versions of Snakes & Ladders move a token from one square to another and stop there. The moments everyone remembers from the real game, climbing a ladder and getting caught by a snake, are skipped.",
+    concept:
+      "Keep the traditional rules exact and spend the effort on those two moments. Characters walk the board, climb ladders rung by rung and get bitten, then slide down the snake's real body curve, while a strict turn engine keeps every animation in step with the rules.",
+    responsibilities: [
+      "Rules engine as pure functions: exact-finish rule, optional roll-a-1-to-start and six-rolls-again house rules",
+      "Turn state machine where every stage waits for its animation, so turns cannot overlap or corrupt a restart",
+      "Procedural humanoid rig with idle, walk, climb, recoil, slide and celebrate animations, in six looks",
+      "Snakes on Catmull-Rom curves with procedural skin, hinged jaw and a full bite sequence",
+      "3D board in a single instanced draw call, ladders, die physics-style tumble and confetti",
+      "Computer opponent that uses the same die and rules",
+      "UI: home screen with live 3D preview, setup, move history, pause, settings and victory screen",
+      "Procedural Web Audio sound, saved progress, keyboard controls, reduced-motion support and 92 tests",
+    ],
+    system: [
+      {
+        label: "Roll",
+        detail: "A fair die (crypto RNG with rejection sampling) decides the value; the 3D die tumbles and settles on it.",
+      },
+      { label: "Plan", detail: "The rules engine works out the whole turn up front: move, ladder, snake, overshoot or win." },
+      { label: "Walk", detail: "The character walks square by square along the board's serpentine path." },
+      { label: "Ladder or snake", detail: "Climb rung by rung to the top, or get bitten and slide down the snake's body." },
+      { label: "Next turn", detail: "Only when every animation reports back does the next player roll." },
+    ],
+    process: [
+      {
+        heading: "Rules first",
+        body: "Built the board layout, rules and turn engine as plain TypeScript with tests before drawing anything.",
+      },
+      {
+        heading: "Characters and creatures",
+        body: "Modelled and animated the characters, snakes and ladders procedurally, with shared curves so rendering and movement always match.",
+      },
+      {
+        heading: "Polish and safety",
+        body: "Added sound, saved games, settings, accessibility and checks so stale or duplicate animation callbacks are ignored.",
+      },
+    ],
+    result:
+      "Live on Vercel and deployed automatically from GitHub on every push. It runs fully offline in the browser with nothing to install.",
+    highlights: [
+      { value: "100", label: "Squares, one draw call" },
+      { value: "6", label: "Animated characters" },
+      { value: "8", label: "Steps in a snake bite" },
+      { value: "92", label: "Tests" },
+    ],
+    note: "Screens shown in order, captured from one game against the computer.",
+    screens: [
+      {
+        src: "/projects/snakes/1-home.webp",
+        alt: "Snakes and Ladders 3D home screen over a live 3D preview of the board",
+        caption: "1 · Home: the board in 3D",
+        width: 1600,
+        height: 1000,
+      },
+      {
+        src: "/projects/snakes/2-setup.webp",
+        alt: "New game setup with Vs computer mode, house rules and character colours",
+        caption: "2 · New game: mode, house rules, characters",
+        width: 1600,
+        height: 1000,
+      },
+      {
+        src: "/projects/snakes/3-first-turn.webp",
+        alt: "Game screen at the first turn with the dice panel and empty move history",
+        caption: "3 · First turn: roll the die",
+        width: 1600,
+        height: 1000,
+      },
+      {
+        src: "/projects/snakes/4-ladder.webp",
+        alt: "Ava climbed a ladder from square 1 up to square 14, shown in the move history",
+        caption: "4 · Ladder: up from 1 to 14",
+        width: 1600,
+        height: 1000,
+      },
+      {
+        src: "/projects/snakes/5-race.webp",
+        alt: "Both players on the board, Ava on 14 next to the snake on 16 and Leo on 3",
+        caption: "5 · The race: Ava next to the snake on 16",
+        width: 1600,
+        height: 1000,
+      },
+      {
+        src: "/projects/snakes/6-midgame.webp",
+        alt: "Turn 15: Ava on square 67 and Leo on 35, with the move history listing Ava's ladder climbs to 31, 44 and 67",
+        caption: "6 · Mid-game: Ava up three ladders to 67",
+        width: 1600,
+        height: 1000,
+      },
+    ],
+    links: [
+      { label: "Play the game", href: "https://snakes-and-ladders-3d-psi.vercel.app/", kind: "live" },
+      { label: "Source code", href: "https://github.com/thanvanthat/snake-and-ladder-", kind: "source" },
+    ],
+  },
+  {
+    slug: "fresora",
+    number: "04",
     title: "Fresora",
     statement: "Scan food. Use it before it becomes waste.",
     description:
@@ -85,7 +343,7 @@ export const projects: Project[] = [
       "Vercel",
     ],
     status: "Live",
-    visual: "freshco",
+    visual: "fresora",
     device: "phone",
     atmosphere: { accent: "#c5ec7a", base: "#0a0f0a", glow: "#2d4a1f" },
     overview:
@@ -186,15 +444,10 @@ export const projects: Project[] = [
       { label: "Open the live app", href: "https://fresora-web.vercel.app/inventory", kind: "live" },
       { label: "Source code", href: "https://github.com/thanvanthat/fresora-AI", kind: "source" },
     ],
-    gallery: [
-      { caption: "Live scan", variant: 0 },
-      { caption: "Detection overlay", variant: 1 },
-      { caption: "Inventory insight", variant: 2 },
-    ],
   },
   {
     slug: "grantpilot-ai",
-    number: "03",
+    number: "05",
     title: "GrantPilot AI",
     statement: "From government tender to review-ready bid.",
     description:
@@ -322,15 +575,10 @@ export const projects: Project[] = [
       { label: "Open the live app", href: "https://thanvanthat.github.io/GrantPilot-Frontend/#/dashboard", kind: "live" },
       { label: "Source code", href: "https://github.com/thanvanthat/GrantPilot-Frontend", kind: "source" },
     ],
-    gallery: [
-      { caption: "Qualification", variant: 0 },
-      { caption: "Proposal", variant: 1 },
-      { caption: "Compliance", variant: 2 },
-    ],
   },
   {
     slug: "echo-protocol-escape",
-    number: "04",
+    number: "06",
     title: "Echo Protocol: Escape",
     statement: "Third-person action-adventure prototype.",
     description:
@@ -376,7 +624,7 @@ export const projects: Project[] = [
   },
   {
     slug: "eco-dash",
-    number: "05",
+    number: "07",
     title: "Eco Dash",
     statement: "A sustainability-focused endless runner.",
     description:
@@ -420,7 +668,7 @@ export const projects: Project[] = [
   },
   {
     slug: "game-dev-event-platform",
-    number: "06",
+    number: "08",
     title: "Game Dev Event Platform",
     statement: "A home base for game development events.",
     description:
@@ -472,7 +720,14 @@ export const getNextProject = (slug: string) => {
 };
 
 /** Order of the Game Development pinned sequence. */
-export const gameProjects = ["brainverse-ai", "echo-protocol-escape", "eco-dash", "game-dev-event-platform"]
+export const gameProjects = [
+  "gilli",
+  "snakes-and-ladders-3d",
+  "brainverse-ai",
+  "echo-protocol-escape",
+  "eco-dash",
+  "game-dev-event-platform",
+]
   .map((slug) => getProject(slug))
   .filter((p): p is Project => Boolean(p));
 

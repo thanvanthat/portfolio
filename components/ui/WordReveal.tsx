@@ -2,6 +2,7 @@
 
 import { motion, useScroll, useTransform, type MotionValue } from "framer-motion";
 import { useRef } from "react";
+import { usePrefersReducedMotion } from "@/lib/hooks";
 import { cn } from "@/lib/utils";
 
 interface WordRevealProps {
@@ -10,7 +11,8 @@ interface WordRevealProps {
 }
 
 function Word({ word, progress, range }: { word: string; progress: MotionValue<number>; range: [number, number] }) {
-  const opacity = useTransform(progress, range, [0.12, 1]);
+  const reduce = usePrefersReducedMotion();
+  const opacity = useTransform(progress, range, [reduce ? 1 : 0.12, 1]);
   return (
     <motion.span style={{ opacity }} className="inline-block will-change-[opacity]">
       {word}&nbsp;

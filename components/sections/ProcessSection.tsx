@@ -1,13 +1,14 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 import { processSteps } from "@/data/content";
 import { easeOutExpo } from "@/lib/utils";
 import { RevealText } from "@/components/ui/RevealText";
 import { SectionLabel } from "@/components/ui/SectionLabel";
+import { usePrefersReducedMotion } from "@/lib/hooks";
 
 export function ProcessSection() {
-  const reduce = useReducedMotion();
+  const reduce = usePrefersReducedMotion();
   return (
     <section aria-labelledby="process-heading" className="gutter relative border-t border-bone/10 bg-coal py-32 lg:py-44">
       <SectionLabel index="08" title="Process" />

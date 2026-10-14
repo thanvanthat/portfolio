@@ -104,7 +104,7 @@ export function UnrealSection() {
                 <span className="label text-ash">Stage {String(i + 1).padStart(2, "0")}</span>
                 <span
                   className={`display mt-3 block text-[clamp(2.75rem,6vw,5.5rem)] transition-colors duration-500 ${
-                    active === i ? "text-bone" : "text-bone/25"
+                    active === i ? "text-bone" : "text-bone/50"
                   }`}
                 >
                   {stage.label}

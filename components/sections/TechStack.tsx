@@ -35,7 +35,7 @@ export function TechStack() {
                 <span
                   className={cn(
                     "display text-[clamp(2.25rem,5vw,4.25rem)] transition-colors duration-500",
-                    selected ? "text-bone" : "text-bone/25 group-hover:text-bone/60",
+                    selected ? "text-bone" : "text-bone/50 group-hover:text-bone/75",
                   )}
                 >
                   {g.title}

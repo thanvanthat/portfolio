@@ -1,8 +1,9 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 import type { ReactNode } from "react";
 import { easeOutExpo } from "@/lib/utils";
+import { usePrefersReducedMotion } from "@/lib/hooks";
 
 interface FadeInProps {
   children: ReactNode;
@@ -12,7 +13,7 @@ interface FadeInProps {
 }
 
 export function FadeIn({ children, className, delay = 0, y = 24 }: FadeInProps) {
-  const reduce = useReducedMotion();
+  const reduce = usePrefersReducedMotion();
   return (
     <motion.div
       className={className}

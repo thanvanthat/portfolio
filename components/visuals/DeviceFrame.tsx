@@ -46,7 +46,7 @@ export function BrowserFrame({
         <span className="size-2.5 rounded-full bg-[#febc2e]" />
         <span className="size-2.5 rounded-full bg-[#28c840]" />
         {url && (
-          <span className="ml-3 hidden truncate rounded-md bg-white/5 px-3 py-1 font-mono text-[0.6rem] text-white/45 sm:block">
+          <span className="ml-3 hidden truncate rounded-md bg-white/5 px-3 py-1 font-mono text-[0.65rem] text-white/75 sm:block">
             {url.replace(/^https?:\/\//, "")}
           </span>
         )}

@@ -1,10 +1,11 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 import { getProject } from "@/data/projects";
 import { easeOutExpo } from "@/lib/utils";
 import { FadeIn } from "@/components/ui/FadeIn";
 import { LiveProjectFeature } from "./LiveProjectFeature";
+import { usePrefersReducedMotion } from "@/lib/hooks";
 
 /** Values from a real qualification run in the app (AI-Powered Drone Surveillance System). */
 const FIT = [
@@ -16,7 +17,7 @@ const FIT = [
 ];
 
 function GrantPilotFit({ accent }: { accent: string }) {
-  const reduce = useReducedMotion();
+  const reduce = usePrefersReducedMotion();
   return (
     <div className="grid gap-12 lg:grid-cols-12 lg:items-center">
       <FadeIn className="min-w-0 lg:col-span-5">
@@ -26,9 +27,7 @@ function GrantPilotFit({ accent }: { accent: string }) {
           Every opportunity is scored on five weighted dimensions. Each result comes with eligibility checks, capability gaps,
           risks and a Pursue / Review / Skip call, and the proposal and compliance workspaces build on it.
         </p>
-        <p className="label mt-6 text-[0.6rem] text-ash/70">
-          From a real run · AI-Powered Drone Surveillance System, Ministry of Defence
-        </p>
+        <p className="label mt-6 text-ash">From a real run · AI-Powered Drone Surveillance System, Ministry of Defence</p>
       </FadeIn>
       <FadeIn className="min-w-0 lg:col-span-7" delay={0.1}>
         <div className="border border-bone/10 bg-black/25 p-6 sm:p-8">

@@ -1,9 +1,10 @@
 "use client";
 
-import { motion, useMotionValue, useReducedMotion, useSpring } from "framer-motion";
+import { motion, useMotionValue, useSpring } from "framer-motion";
 import Link from "next/link";
 import { useRef, type MouseEvent, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
+import { usePrefersReducedMotion } from "@/lib/hooks";
 
 type Variant = "solid" | "ghost";
 
@@ -45,7 +46,7 @@ export function MagneticButton({
   strength = 0.3,
 }: MagneticButtonProps) {
   const ref = useRef<HTMLSpanElement>(null);
-  const reduce = useReducedMotion();
+  const reduce = usePrefersReducedMotion();
   const x = useSpring(useMotionValue(0), { stiffness: 220, damping: 18, mass: 0.4 });
   const y = useSpring(useMotionValue(0), { stiffness: 220, damping: 18, mass: 0.4 });
 

@@ -3,7 +3,7 @@
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "framer-motion";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { ComponentProps } from "react";
 import { navItems, site, socials } from "@/data/site";
 import type { NavItem } from "@/lib/types";
@@ -27,6 +27,8 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [open, setOpen] = useState(false);
+  const toggleRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
   const { scrollY } = useScroll();
 
   useMotionValueEvent(scrollY, "change", (y) => {
@@ -36,12 +38,41 @@ export function Navbar() {
   });
 
   useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    if (!open) return;
+    const toggle = toggleRef.current;
+    // Keep the page behind the menu out of reach for keyboard and screen readers
+    const background = [document.getElementById("main"), document.querySelector("footer")].filter((el): el is HTMLElement =>
+      Boolean(el),
+    );
+    document.body.style.overflow = "hidden";
+    background.forEach((el) => (el.inert = true));
+    const focusFirst = requestAnimationFrame(() => menuRef.current?.querySelector<HTMLElement>("a")?.focus());
+
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setOpen(false);
+        return;
+      }
+      if (e.key !== "Tab" || !menuRef.current || !toggle) return;
+      // Cycle focus between the Close button and the menu links
+      const focusables = [toggle, ...menuRef.current.querySelectorAll<HTMLElement>("a[href]")];
+      const first = focusables[0]!;
+      const last = focusables[focusables.length - 1]!;
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
     window.addEventListener("keydown", onKey);
     return () => {
+      cancelAnimationFrame(focusFirst);
       document.body.style.overflow = "";
+      background.forEach((el) => (el.inert = false));
       window.removeEventListener("keydown", onKey);
+      toggle?.focus({ preventScroll: true });
     };
   }, [open]);
 
@@ -101,6 +132,7 @@ export function Navbar() {
               Building
             </span>
             <button
+              ref={toggleRef}
               type="button"
               className="label flex h-10 items-center gap-3 text-bone lg:hidden"
               aria-expanded={open}
@@ -130,7 +162,11 @@ export function Navbar() {
       <AnimatePresence>
         {open && (
           <motion.div
+            ref={menuRef}
             id="mobile-menu"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Site menu"
             className="fixed inset-0 z-40 flex flex-col justify-between bg-ink gutter pb-8 pt-28 lg:hidden"
             initial={{ clipPath: "inset(0 0 100% 0)" }}
             animate={{ clipPath: "inset(0 0 0% 0)" }}

@@ -3,7 +3,8 @@ export type ProjectCategory = "game" | "ai" | "web";
 export type ProjectStatus = "Live" | "In development" | "Prototype" | "Concept prototype" | "Completed" | "Exploring";
 
 /** Identifies which procedural artwork renders for a project. */
-export type ProjectVisualKey = "brainverse" | "freshco" | "grantpilot" | "echo" | "ecodash" | "eventplatform";
+export type ProjectVisualKey =
+  "brainverse" | "gilli" | "snakes" | "fresora" | "grantpilot" | "echo" | "ecodash" | "eventplatform";
 
 export interface ProjectAtmosphere {
   /** Accent color used sparingly for highlights, states and hover. */
@@ -62,7 +63,8 @@ export interface Project {
   process: CaseStudySection[];
   result: string;
   /** Procedural key-art variants, used when a project has no real screens yet. */
-  gallery: { caption: string; variant: number }[];
+  /** Generated key-art frames for projects without real screens. */
+  gallery?: { caption: string; variant: number }[];
   /** Real product captures. When present they replace the procedural art. */
   screens?: ProjectScreen[];
   /** "phone" renders screens in a handset frame, "desktop" in a browser frame. */

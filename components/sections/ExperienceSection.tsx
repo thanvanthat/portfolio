@@ -1,16 +1,17 @@
 "use client";
 
-import { motion, useReducedMotion, useScroll, useSpring } from "framer-motion";
+import { motion, useScroll, useSpring } from "framer-motion";
 import { useRef } from "react";
 import { timeline } from "@/data/content";
 import { easeOutExpo } from "@/lib/utils";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { RevealText } from "@/components/ui/RevealText";
+import { usePrefersReducedMotion } from "@/lib/hooks";
 
 /** Trajectory timeline: a spine that draws itself as chapters scroll past. */
 export function ExperienceSection() {
   const ref = useRef<HTMLOListElement>(null);
-  const reduce = useReducedMotion();
+  const reduce = usePrefersReducedMotion();
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start 75%", "end 60%"] });
   const scaleY = useSpring(scrollYProgress, { stiffness: 80, damping: 24 });
 

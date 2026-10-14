@@ -1,7 +1,8 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 import { cn, easeOutExpo } from "@/lib/utils";
+import { usePrefersReducedMotion } from "@/lib/hooks";
 
 interface RevealTextProps {
   lines: string[];
@@ -26,13 +27,14 @@ export function RevealText({
   immediate = false,
   id,
 }: RevealTextProps) {
-  const reduce = useReducedMotion();
+  const reduce = usePrefersReducedMotion();
   const trigger = immediate
     ? { animate: "show" as const }
     : { whileInView: "show" as const, viewport: { once: true, margin: "0px 0px -12% 0px" } };
 
   return (
-    <Tag id={id} className={className} aria-label={lines.join(" ")}>
+    <Tag id={id} className={className}>
+      <span className="sr-only">{lines.join(" ")}</span>
       <motion.span className="block" initial="hidden" {...trigger} aria-hidden="true">
         {lines.map((line, i) => (
           <span key={`${line}-${i}`} className="block overflow-hidden pb-[0.06em] -mb-[0.06em]">

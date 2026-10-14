@@ -35,7 +35,12 @@ function FresoraScore({ accent }: { accent: string }) {
             <span>backend/app/freshness.py</span>
             <span style={{ color: accent }}>opencv-heuristic-v1</span>
           </div>
-          <pre className="overflow-x-auto px-5 py-6 font-mono text-[0.78rem] leading-relaxed text-bone/85 sm:text-sm">
+          <pre
+            tabIndex={0}
+            role="region"
+            aria-label="Freshness scoring formula"
+            className="overflow-x-auto px-5 py-6 font-mono text-[0.78rem] leading-relaxed text-bone/85 sm:text-sm"
+          >
             {FORMULA}
           </pre>
           <div className="border-t border-bone/10 px-5 py-5">
@@ -47,7 +52,7 @@ function FresoraScore({ accent }: { accent: string }) {
             <div className="mt-3 grid grid-cols-4 gap-2">
               {BANDS.map((b) => (
                 <div key={b.label}>
-                  <p className="label text-[0.6rem]" style={{ color: b.color }}>
+                  <p className="label" style={{ color: b.color }}>
                     {b.label}
                   </p>
                   <p className="font-mono text-xs text-ash">{b.range}</p>

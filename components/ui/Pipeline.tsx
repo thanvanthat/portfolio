@@ -1,9 +1,10 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 import type { CSSProperties } from "react";
 import type { PipelineStep } from "@/lib/types";
 import { cn, easeOutExpo } from "@/lib/utils";
+import { usePrefersReducedMotion } from "@/lib/hooks";
 
 interface PipelineProps {
   steps: PipelineStep[];
@@ -19,7 +20,7 @@ interface PipelineProps {
  * Connectors draw in sequence and a signal pulse travels through them.
  */
 export function Pipeline({ steps, accent = "#ecebe6", className, vertical = false, ariaLabel }: PipelineProps) {
-  const reduce = useReducedMotion();
+  const reduce = usePrefersReducedMotion();
   const style = { "--accent": accent } as CSSProperties;
 
   return (

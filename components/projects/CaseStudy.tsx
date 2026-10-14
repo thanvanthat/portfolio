@@ -20,10 +20,10 @@ interface CaseStudyProps {
 function Chapter({ index, title, children }: { index: string; title: string; children: ReactNode }) {
   return (
     <section className="grid gap-6 border-t border-bone/10 py-14 lg:grid-cols-12 lg:py-20" aria-label={title}>
-      <div className="label flex gap-3 text-ash lg:col-span-3">
+      <h2 className="label flex gap-3 text-ash lg:col-span-3">
         <span className="text-bone">{index}</span>
         <span>{title}</span>
-      </div>
+      </h2>
       <div className="lg:col-span-8 lg:col-start-5">{children}</div>
     </section>
   );
@@ -175,7 +175,7 @@ export function CaseStudy({ project, next }: CaseStudyProps) {
             data-cursor="drag"
             className="no-scrollbar flex snap-x snap-mandatory gap-4 overflow-x-auto gutter lg:grid lg:grid-cols-12 lg:overflow-visible"
           >
-            {project.gallery.map((g, i) => (
+            {(project.gallery ?? []).map((g, i) => (
               <FadeIn
                 key={g.caption}
                 delay={i * 0.1}
@@ -203,9 +203,7 @@ export function CaseStudy({ project, next }: CaseStudyProps) {
               </FadeIn>
             ))}
           </div>
-          <p className="gutter label mt-6 text-[0.6rem] text-ash/60">
-            Key art is generated for this portfolio; project captures coming soon.
-          </p>
+          <p className="gutter label mt-6 text-ash">Key art is generated for this portfolio.</p>
         </section>
       )}
 

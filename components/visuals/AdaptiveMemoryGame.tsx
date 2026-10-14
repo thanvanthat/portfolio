@@ -185,7 +185,7 @@ export function AdaptiveMemoryGame() {
         <div aria-live="polite">
           <p className="label text-ash">AI decision</p>
           <p className="mt-2 text-lg leading-snug text-bone">{decision}</p>
-          <p className="label mt-6 text-[0.6rem] text-ash/70">Interactive demo · simplified adaptive rules</p>
+          <p className="label mt-6 text-ash">Interactive demo · simplified adaptive rules</p>
         </div>
       </div>
     </div>

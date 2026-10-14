@@ -1,10 +1,11 @@
 "use client";
 
-import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import type { Project } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { BrowserFrame, PhoneFrame } from "./DeviceFrame";
+import { usePrefersReducedMotion } from "@/lib/hooks";
 
 interface DeviceStageProps {
   project: Project;
@@ -17,7 +18,7 @@ interface DeviceStageProps {
  */
 export function DeviceStage({ project, className }: DeviceStageProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const reduce = useReducedMotion();
+  const reduce = usePrefersReducedMotion();
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
   const r = (a: number, b: number) => (reduce ? [0, 0] : [a, b]);
   const yBack = useTransform(scrollYProgress, [0, 1], r(80, -80));

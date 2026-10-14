@@ -31,7 +31,7 @@ export function Footer() {
         <span>
           © {site.year} {site.name.toUpperCase()}
         </span>
-        <a href="#main" className="transition-colors hover-fine:text-bone">
+        <a href="#top" className="transition-colors hover-fine:text-bone">
           Back to top ↑
         </a>
       </div>

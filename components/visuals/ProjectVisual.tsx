@@ -150,9 +150,9 @@ function BrainVerseScene({ a, variant, animated }: SceneProps) {
   );
 }
 
-/* ---------------------------------------------------------------- FreshcoAI */
+/* ---------------------------------------------------------------- Fresora */
 
-function FreshcoScene({ a, variant, animated }: SceneProps) {
+function FresoraScene({ a, variant, animated }: SceneProps) {
   const items = [
     { x: 520, y: 520, r: 120, label: "APPLE", conf: "0.94", c: "#c9453a" },
     { x: 820, y: 470, r: 100, label: "TOMATO", conf: "0.91", c: "#d8543a" },
@@ -420,7 +420,9 @@ function EventPlatformScene({ a, variant }: SceneProps) {
 
 const scenes: Record<ProjectVisualKey, (props: SceneProps) => ReactElement> = {
   brainverse: BrainVerseScene,
-  freshco: FreshcoScene,
+  gilli: EcoDashScene,
+  snakes: EventPlatformScene,
+  fresora: FresoraScene,
   grantpilot: EventPlatformScene,
   echo: EchoScene,
   ecodash: EcoDashScene,

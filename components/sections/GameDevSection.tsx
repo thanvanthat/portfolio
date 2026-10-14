@@ -10,7 +10,7 @@ import { SectionLabel } from "@/components/ui/SectionLabel";
 
 /**
  * Game Development: a pinned horizontal sequence on desktop (GSAP ScrollTrigger),
- * a vertical stack of full-bleed stories on smaller screens.
+ * a vertical stack of full-bleed stories on smaller screens and for reduced motion.
  */
 export function GameDevSection() {
   const pinRef = useRef<HTMLDivElement>(null);
@@ -112,8 +112,11 @@ export function GameDevSection() {
         </div>
       </div>
 
-      <div ref={pinRef} className="relative lg:h-[100svh] lg:overflow-hidden">
-        <div ref={trackRef} className="flex flex-col gap-px will-change-transform lg:h-full lg:flex-row lg:gap-0">
+      <div ref={pinRef} className="relative motion-safe:lg:h-[100svh] motion-safe:lg:overflow-hidden">
+        <div
+          ref={trackRef}
+          className="flex flex-col gap-px motion-safe:will-change-transform motion-safe:lg:h-full motion-safe:lg:flex-row motion-safe:lg:gap-0"
+        >
           {gameProjects.map((project, i) => (
             <GameProject
               key={project.slug}
@@ -121,11 +124,14 @@ export function GameDevSection() {
               index={i}
               total={gameProjects.length}
               onOpen={setOpen}
-              className="w-full lg:h-full lg:w-[86vw] lg:border-r lg:border-black"
+              className="w-full motion-reduce:lg:min-h-[85svh] motion-safe:lg:h-full motion-safe:lg:w-[86vw] motion-safe:lg:border-r motion-safe:lg:border-black"
             />
           ))}
         </div>
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 hidden gutter pb-6 lg:block" aria-hidden="true">
+        <div
+          className="pointer-events-none absolute inset-x-0 bottom-0 hidden gutter pb-6 motion-safe:lg:block"
+          aria-hidden="true"
+        >
           <div className="flex items-center gap-4">
             <span className="label text-ash">Scroll</span>
             <span className="relative h-px flex-1 bg-bone/15">
