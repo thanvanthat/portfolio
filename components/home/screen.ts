@@ -24,7 +24,8 @@ export type ScreenMode =
   | { kind: "eyes"; lookX: number; lookY: number; blink: number; tick: number }
   | { kind: "chapter"; index: number; tick: number }
   | { kind: "work"; index: number }
-  | { kind: "outro"; tick: number };
+  | { kind: "outro"; tick: number }
+  | { kind: "start"; tick: number };
 
 let PIXEL = "ui-monospace, monospace";
 
@@ -150,11 +151,27 @@ function outro(ctx: CanvasRenderingContext2D, tick: number) {
   if (Math.floor(tick * 1.6) % 2 === 0) text(ctx, "INSERT COIN TO CONTINUE", SCREEN_W / 2, SCREEN_H * 0.78, 20, green);
 }
 
+/** After a click on the cabinet: a quick flash, then "player 1 ready". */
+function start(ctx: CanvasRenderingContext2D, tick: number) {
+  const flash = Math.max(0, 1 - tick * 4);
+  crt(
+    ctx,
+    flash > 0
+      ? `rgb(${Math.round(11 + 174 * flash)},${Math.round(23 + 222 * flash)},${Math.round(18 + 182 * flash)})`
+      : undefined,
+  );
+  const green = "#b9f5c8";
+  text(ctx, "PLAYER 1", SCREEN_W / 2, SCREEN_H * 0.4, 52, green, "center", 700);
+  text(ctx, "READY!", SCREEN_W / 2, SCREEN_H * 0.58, 52, green, "center", 700);
+  if (Math.floor(tick * 6) % 2 === 0) text(ctx, "▶ SCROLL TO PLAY", SCREEN_W / 2, SCREEN_H * 0.8, 20, green);
+}
+
 export function drawScreen(ctx: CanvasRenderingContext2D, mode: ScreenMode, chapters: ScreenChapter[], works: ScreenWork[]) {
   ctx.save();
   if (mode.kind === "eyes") eyes(ctx, mode);
   else if (mode.kind === "chapter") chapter(ctx, chapters[mode.index]!, mode.index, chapters.length, mode.tick);
   else if (mode.kind === "work") work(ctx, works[mode.index]!);
+  else if (mode.kind === "start") start(ctx, mode.tick);
   else outro(ctx, mode.tick);
   glass(ctx);
   ctx.restore();

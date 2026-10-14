@@ -34,7 +34,7 @@ export default function HomePage() {
           side: site.roles.slice(0, 2).join(" + "),
         }}
       >
-        <HomeHero title={`About ${site.shortName}`} body={aboutIntro} />
+        <HomeHero title={`About ${site.shortName}`} role={site.roles.slice(0, 2).join(" & ")} body={aboutIntro} />
         <Journey entries={timeline} />
         <WorksGallery projects={projects} />
         <HomeOutro email={site.email} socials={socials} skills={skillGroups} />

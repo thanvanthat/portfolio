@@ -326,9 +326,18 @@ html[data-intro="skip"] .intro-loader {
   100% { transform: translateY(400%); }
 }
 
+.home-loading {
+  animation: home-loading 1.4s ease-in-out infinite;
+}
+
+@keyframes home-loading {
+  50% { opacity: 0.35; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .film-grain,
-  .scroll-dot { animation: none; }
+  .scroll-dot,
+  .home-loading { animation: none; }
 }
 
 .journey-rail {

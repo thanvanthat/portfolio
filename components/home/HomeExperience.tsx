@@ -1,8 +1,8 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useMotionValue, useScroll, useTransform } from "framer-motion";
 import dynamic from "next/dynamic";
-import { useEffect, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useState, type ReactNode } from "react";
 import type { ScreenChapter, ScreenWork } from "./screen";
 
 const ArcadeScene = dynamic(() => import("./ArcadeScene"), { ssr: false });
@@ -19,11 +19,16 @@ interface HomeExperienceProps {
 function hasWebGL() {
   try {
     const c = document.createElement("canvas");
-    return Boolean(c.getContext("webgl2") ?? c.getContext("webgl"));
+    const gl = c.getContext("webgl2") ?? c.getContext("webgl");
+    // Release the probe context straight away; browsers cap how many can be alive
+    gl?.getExtension("WEBGL_lose_context")?.loseContext();
+    return Boolean(gl);
   } catch {
     return false;
   }
 }
+
+const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
 
 /**
  * The homepage shell: one fixed 3D arcade scene behind scrolling HTML, plus the
@@ -31,6 +36,9 @@ function hasWebGL() {
  */
 export function HomeExperience({ name, subtitle, chapters, works, chrome, children }: HomeExperienceProps) {
   const [scene, setScene] = useState<null | { lite: boolean }>(null);
+  const [ready, setReady] = useState(false);
+  const onReady = useCallback(() => setReady(true), []);
+  const onLost = useCallback(() => setScene(null), []);
   useEffect(() => {
     if (!hasWebGL()) return;
     const lite = window.matchMedia("(pointer: coarse)").matches || window.innerWidth < 768;
@@ -43,32 +51,64 @@ export function HomeExperience({ name, subtitle, chapters, works, chrome, childr
   const scrim = useTransform(scrollY, [0, 520], [0, 0.32]);
   const chromeOpacity = useTransform(scrollY, [0, 280], [1, 0]);
   // The frosted rail behind the journey text, and the darker fog behind the works cards,
-  // follow where those sections sit in the viewport
-  const rail = useTransform(scrollY, () => {
-    if (typeof document === "undefined") return 0;
-    const journey = document.getElementById("journey")?.getBoundingClientRect();
-    if (!journey) return 0;
-    const vh = window.innerHeight;
-    const enter = Math.min(1, Math.max(0, (vh * 0.9 - journey.top) / (vh * 0.5)));
-    const leave = Math.min(1, Math.max(0, (journey.bottom - vh * 0.2) / (vh * 0.5)));
-    return Math.min(enter, leave);
-  });
-  const fog = useTransform(scrollY, () => {
-    if (typeof document === "undefined") return 0;
-    const works = document.getElementById("works")?.getBoundingClientRect();
-    const contact = document.getElementById("contact")?.getBoundingClientRect();
-    if (!works) return 0;
-    const vh = window.innerHeight;
-    const enter = Math.min(1, Math.max(0, (vh - works.top) / (vh * 0.6)));
-    const leave = contact ? Math.min(1, Math.max(0, contact.top / (vh * 0.6))) : 1;
-    return Math.min(enter, leave) * 0.5;
-  });
+  // follow where those sections sit in the viewport. Measured on scroll and resize, and
+  // once on mount so a reload part-way down the page starts in the right state.
+  const rail = useMotionValue(0);
+  const fog = useMotionValue(0);
+  useEffect(() => {
+    const journey = document.getElementById("journey");
+    const worksEl = document.getElementById("works");
+    const contact = document.getElementById("contact");
+    let raf = 0;
+    const measure = () => {
+      raf = 0;
+      const vh = window.innerHeight;
+      const j = journey?.getBoundingClientRect();
+      rail.set(j ? Math.min(clamp01((vh * 0.9 - j.top) / (vh * 0.5)), clamp01((j.bottom - vh * 0.2) / (vh * 0.5))) : 0);
+      const w = worksEl?.getBoundingClientRect();
+      const c = contact?.getBoundingClientRect();
+      const enter = w ? clamp01((vh - w.top) / (vh * 0.6)) : 0;
+      const leave = c ? clamp01(c.top / (vh * 0.6)) : 1;
+      fog.set(Math.min(enter, leave) * 0.5);
+    };
+    const schedule = () => {
+      if (!raf) raf = requestAnimationFrame(measure);
+    };
+    measure();
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+    };
+  }, [rail, fog]);
 
   return (
-    <div className="home-root relative isolate">
+    <div className="home-root relative isolate overflow-x-clip">
       <div aria-hidden="true" className="home-sky fixed inset-0 -z-10">
-        {scene && <ArcadeScene name={name} subtitle={subtitle} chapters={chapters} works={works} lite={scene.lite} />}
+        <div className="h-full w-full transition-opacity duration-1000 ease-out" style={{ opacity: ready ? 1 : 0 }}>
+          {scene && (
+            <ArcadeScene
+              name={name}
+              subtitle={subtitle}
+              chapters={chapters}
+              works={works}
+              lite={scene.lite}
+              onReady={onReady}
+              onLost={onLost}
+            />
+          )}
+        </div>
       </div>
+      {scene && !ready && (
+        <p
+          aria-hidden="true"
+          className="label home-loading pointer-events-none fixed bottom-[calc(var(--gutter)+2.5rem)] left-1/2 z-10 -translate-x-1/2 text-[#f7f2e8]/80"
+        >
+          Loading world
+        </p>
+      )}
       <motion.div
         aria-hidden="true"
         className="pointer-events-none fixed inset-0 -z-10 bg-[#0a0d12]"

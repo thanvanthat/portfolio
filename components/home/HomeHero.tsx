@@ -3,8 +3,11 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 
-/** Handwritten title over the cabinet; it blurs and spreads apart as you scroll away. */
-export function HomeHero({ title, body }: { title: string; body: string }) {
+/**
+ * Handwritten title over the scene; it blurs and spreads apart as you scroll away.
+ * The hero ignores the pointer so clicks reach the 3D cabinet behind it ("press start").
+ */
+export function HomeHero({ title, role, body }: { title: string; role: string; body: string }) {
   const ref = useRef<HTMLElement>(null);
   // 0 at the top of the page, 1 once the hero has scrolled out
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
@@ -20,7 +23,7 @@ export function HomeHero({ title, body }: { title: string; body: string }) {
       ref={ref}
       id="home"
       aria-labelledby="home-title"
-      className="relative flex min-h-[100svh] flex-col items-center justify-end px-6 pb-[14vh] text-center"
+      className="pointer-events-none relative flex min-h-[100svh] flex-col items-center justify-end px-6 pb-[14vh] text-center"
     >
       {/* Soft shade under the copy so it reads against the light end of the sky */}
       <motion.div
@@ -35,6 +38,7 @@ export function HomeHero({ title, body }: { title: string; body: string }) {
           style={{ y: titleY, letterSpacing: spacing }}
         >
           {title}
+          <span className="sr-only"> — {role}</span>
         </motion.h1>
         <motion.p
           className="font-serif-up mx-auto mt-5 max-w-[38rem] text-[clamp(1.05rem,1.5vw,1.3rem)] leading-relaxed text-[#f7f2e8] [text-shadow:0_1px_14px_rgb(20_24_20/0.45)]"

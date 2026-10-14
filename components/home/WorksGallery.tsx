@@ -108,6 +108,18 @@ export function WorksGallery({ projects }: { projects: Project[] }) {
     setActive(clamped);
   };
 
+  // Tabbing into a card that is still off to the side scrolls the page to it, since the
+  // cards move with vertical scroll rather than their own scroll position
+  const onFocus = (e: React.FocusEvent) => {
+    const card = (e.target as HTMLElement).closest<HTMLElement>("[data-work]");
+    const el = section.current;
+    if (!card || !el || travel <= 0 || projects.length < 2) return;
+    const i = Number(card.dataset.work);
+    const top = el.getBoundingClientRect().top + window.scrollY + (i / (projects.length - 1)) * travel;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.scrollTo({ top, behavior: reduce ? "auto" : "smooth" });
+  };
+
   useMotionValueEvent(scrollYProgress, "change", (p) => {
     if (travel > 0) pick(Math.round(p * (projects.length - 1)));
   });
@@ -135,17 +147,18 @@ export function WorksGallery({ projects }: { projects: Project[] }) {
       className="relative"
       style={travel > 0 ? { height: `calc(100vh + ${travel}px)` } : undefined}
     >
-      <div className={cn(travel > 0 && "sticky top-0 flex h-screen flex-col justify-center overflow-hidden")}>
+      <div className={cn(travel > 0 && "sticky top-0 flex h-screen flex-col justify-center overflow-clip")}>
         <div className="flex items-end justify-between gap-6 px-6 pb-8 pt-24 md:px-12 md:pt-0">
           <h2 id="works-title" className="font-hand text-[clamp(2.6rem,6vw,5rem)] leading-none text-[#f7f2e8]">
             Selected works
           </h2>
-          <p className="label hidden text-[#f7f2e8]/70 md:block" aria-live="polite">
+          <p className="label hidden text-[#f7f2e8]/70 md:block">
             {String(active + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")} · {projects[active]?.title}
           </p>
         </div>
         <motion.div
           ref={track}
+          onFocus={onFocus}
           style={travel > 0 ? { x } : undefined}
           className="flex flex-col gap-6 px-6 md:w-max md:flex-row md:gap-8 md:px-12 md:pr-[11vw]"
         >

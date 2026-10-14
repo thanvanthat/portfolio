@@ -1,9 +1,9 @@
 "use client";
 
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { Canvas, useFrame, useThree, type ThreeEvent } from "@react-three/fiber";
 import { Bloom, DepthOfField, EffectComposer, SMAA } from "@react-three/postprocessing";
 import type { DepthOfFieldEffect } from "postprocessing";
-import { useEffect, useMemo, useRef } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 import {
@@ -17,7 +17,8 @@ import {
   type ScreenMode,
   type ScreenWork,
 } from "./screen";
-import { pointer, readStage, type StageState } from "./stage";
+import { Player } from "./Player";
+import { live, pointer, readStage, resetStage, type StageState } from "./stage";
 
 export interface ArcadeSceneProps {
   name: string;
@@ -26,6 +27,10 @@ export interface ArcadeSceneProps {
   works: ScreenWork[];
   /** Coarse pointers and small screens skip depth of field and use a wider shot. */
   lite: boolean;
+  /** Called once the character and the scene have loaded, so the page can fade it in. */
+  onReady?: () => void;
+  /** Called if the browser drops the WebGL context; the page falls back to the painted sky. */
+  onLost?: () => void;
 }
 
 /* ------------------------------------------------------------ Camera path */
@@ -39,13 +44,13 @@ interface Shot {
 
 /** One shot per stage: hero, the four journey chapters, works, outro. */
 const SHOTS: Shot[] = [
-  { pos: [0, 1.6, 7.6], target: [0, 1.1, 0], fov: 34, bokeh: 2.5 }, // hero: the whole cabinet, high in frame
+  { pos: [-0.55, 1.6, 7.6], target: [-0.55, 1.1, 0], fov: 34, bokeh: 2.5 }, // hero: player and cabinet, high in frame
   { pos: [-1.25, 3.05, 3.1], target: [0.7, 2.45, 0.2], fov: 30, bokeh: 6 }, // marquee
   { pos: [-1.15, 2.15, 2.0], target: [0.45, 1.22, 0.55], fov: 30, bokeh: 6 }, // controls
   { pos: [-0.7, 1.95, 2.55], target: [0.62, 1.8, 0.2], fov: 30, bokeh: 6 }, // screen
   { pos: [-3.3, 2.25, 4.3], target: [0.95, 1.45, 0], fov: 32, bokeh: 4 }, // three-quarter view
   { pos: [0, 1.86, 2.35], target: [0, 1.83, 0.2], fov: 32, bokeh: 3 }, // works: into the screen
-  { pos: [2.5, 1.5, 7.3], target: [0, 0.88, 0], fov: 34, bokeh: 2.5 }, // outro: high in frame, like the hero
+  { pos: [2.2, 1.5, 7.3], target: [-0.25, 0.88, 0], fov: 34, bokeh: 2.5 }, // outro: high in frame, like the hero
 ];
 
 const ease = (t: number) => t * t * (3 - 2 * t);
@@ -179,17 +184,30 @@ function Cabinet({ screen, marquee }: { screen: THREE.Texture; marquee: THREE.Te
       j.rotation.z += (-pointer.x * 0.45 - j.rotation.z) * k;
       j.rotation.x += (-pointer.y * 0.35 - j.rotation.x) * k;
     }
+    // Buttons bob on a slow idle loop, and all flash down together after "press start"
     const t = state.clock.elapsedTime;
+    const pressed = t - live.pressedAt < 0.5;
     buttons.current?.children.forEach((b, i) => {
-      b.position.y = 0.035 - Math.max(0, Math.sin(t * 2.2 - i * 0.9)) * 0.012;
+      const idle = live.reduced ? 0 : Math.max(0, Math.sin(t * 2.2 - i * 0.9)) * 0.012;
+      b.position.y = 0.035 - (pressed ? 0.02 : idle);
     });
   });
+
+  // Clicking the cabinet presses start: the player reaches for it and the screen reacts
+  const get = useThree((st) => st.get);
+  const press = (e: ThreeEvent<MouseEvent>) => {
+    e.stopPropagation();
+    live.pressedAt = get().clock.elapsedTime;
+  };
+  const hover = (on: boolean) => () => {
+    document.body.style.cursor = on ? "pointer" : "";
+  };
 
   // The screen sits on the slanted face between (z .38, y 1.34) and (z .2, y 2.36)
   const tilt = -Math.atan2(0.18, 1.02);
 
   return (
-    <group>
+    <group onClick={press} onPointerOver={hover(true)} onPointerOut={hover(false)}>
       {/* Side panels */}
       <mesh
         geometry={side}
@@ -296,6 +314,7 @@ function Float({
   useFrame((state) => {
     const g = ref.current;
     if (!g) return;
+    if (live.reduced) return;
     const t = state.clock.elapsedTime * speed + phase;
     g.position.y = position[1] + Math.sin(t) * 0.08;
     g.rotation.x = Math.sin(t * 0.6) * 0.4;
@@ -426,6 +445,22 @@ class MarqueeSurface {
 
 function Rig({ chapters, works, name, subtitle, lite }: ArcadeSceneProps) {
   const get = useThree((st) => st.get);
+  const setDpr = useThree((st) => st.setDpr);
+  // Drop to the light effect chain if this device can't hold ~30 fps with depth of field
+  const [degraded, setDegraded] = useState(false);
+  const perf = useRef({ time: 0, frames: 0 });
+
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const sync = () => (live.reduced = mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => {
+      mq.removeEventListener("change", sync);
+      resetStage();
+      document.body.style.cursor = "";
+    };
+  }, []);
   const screen = useMemo(() => new ScreenSurface(), []);
   const marquee = useMemo(() => new MarqueeSurface(), []);
   useEffect(
@@ -444,8 +479,12 @@ function Rig({ chapters, works, name, subtitle, lite }: ArcadeSceneProps) {
     };
     draw();
     // Redraw once the web font has loaded so the canvases use it
-    document.fonts?.ready.then(draw);
-    preloadCovers(works, () => screen.invalidate());
+    let active = true;
+    document.fonts?.ready.then(() => active && draw());
+    preloadCovers(works, () => active && screen.invalidate());
+    return () => {
+      active = false;
+    };
   }, [marquee, screen, name, subtitle, works]);
 
   useEffect(() => {
@@ -458,7 +497,7 @@ function Rig({ chapters, works, name, subtitle, lite }: ArcadeSceneProps) {
   }, []);
 
   const state = useRef({
-    stage: { s: -1, work: 0, works: 0 } as StageState,
+    stage: { s: -1, work: 0 } as StageState,
     s: null as number | null,
     shot: { pos: new THREE.Vector3(), target: new THREE.Vector3(), fov: 34, bokeh: 3 },
     look: { x: 0, y: 0 },
@@ -475,17 +514,33 @@ function Rig({ chapters, works, name, subtitle, lite }: ArcadeSceneProps) {
     const { camera, size } = get();
     const cam = camera as THREE.PerspectiveCamera;
 
+    // Average frame time over ~2 s; give up depth of field once if it stays slow
+    if (!lite && !degraded && t > 4) {
+      perf.current.time += dt;
+      perf.current.frames += 1;
+      if (perf.current.time > 2) {
+        if (perf.current.time / perf.current.frames > 1 / 30) {
+          setDegraded(true);
+          setDpr(1);
+        }
+        perf.current = { time: 0, frames: 0 };
+      }
+    }
+
     readStage(r.stage);
     r.s ??= r.stage.s;
     r.s += (r.stage.s - r.s) * (1 - Math.pow(0.004, dt));
     const s = r.s;
+    live.s = s;
 
     // Camera: follow the shot path, then orbit a few degrees around the focus point with the cursor
     const shot = r.shot;
     sampleShot(s, shot);
     if (size.width < size.height * 1.05) {
-      // Portrait: centre the subject and pull back, further for the close-ups
-      shot.target.x *= 0.15;
+      // Portrait: centre the subject and pull back, further for the close-ups. The wide
+      // opening and closing shots centre on the player and cabinet together.
+      const wide = THREE.MathUtils.clamp(-s, 0, 1) + THREE.MathUtils.clamp(s - (SHOTS.length - 3), 0, 1);
+      shot.target.x = THREE.MathUtils.lerp(shot.target.x * 0.15, -0.62, wide);
       const close = THREE.MathUtils.clamp(1 - Math.abs(s - 1.5) / 2.5, 0, 1);
       r.v
         .copy(shot.pos)
@@ -496,7 +551,8 @@ function Rig({ chapters, works, name, subtitle, lite }: ArcadeSceneProps) {
     const k = 1 - Math.pow(0.08, dt);
     r.look.x += (pointer.x - r.look.x) * k;
     r.look.y += (pointer.y - r.look.y) * k;
-    r.e.set(-r.look.y * 0.05, -r.look.x * 0.07, 0);
+    const sway = live.reduced ? 0 : 1;
+    r.e.set(-r.look.y * 0.05 * sway, -r.look.x * 0.07 * sway, 0);
     r.q.setFromEuler(r.e);
     r.v.copy(shot.pos).sub(shot.target).applyQuaternion(r.q).add(shot.target);
     cam.position.copy(r.v);
@@ -515,7 +571,8 @@ function Rig({ chapters, works, name, subtitle, lite }: ArcadeSceneProps) {
     const n = chapters.length;
     const at = Math.round(s);
     let mode: ScreenMode;
-    if (at <= -1) {
+    if (t - live.pressedAt < 2.2) mode = { kind: "start", tick: t - live.pressedAt };
+    else if (at <= -1) {
       const b = r.blink;
       if (t > b.next) {
         b.t = t;
@@ -528,6 +585,7 @@ function Rig({ chapters, works, name, subtitle, lite }: ArcadeSceneProps) {
     else if (at === n) mode = { kind: "work", index: Math.min(r.stage.work, works.length - 1) };
     else mode = { kind: "outro", tick: t };
     const key = mode.kind === "work" || mode.kind === "chapter" ? `${mode.kind}-${mode.index}` : mode.kind;
+
     screen.update(mode, key, t, chapters, works);
   });
 
@@ -535,7 +593,7 @@ function Rig({ chapters, works, name, subtitle, lite }: ArcadeSceneProps) {
     <>
       <Cabinet screen={screen.texture} marquee={marquee.texture} />
       <Props />
-      {lite ? (
+      {lite || degraded ? (
         <EffectComposer multisampling={0}>
           <Bloom mipmapBlur intensity={0.55} luminanceThreshold={0.85} luminanceSmoothing={0.3} />
         </EffectComposer>
@@ -573,20 +631,31 @@ function Lights() {
 }
 
 export default function ArcadeScene(props: ArcadeSceneProps) {
+  const { onLost } = props;
   return (
     <Canvas
-      shadows={{ type: THREE.PCFSoftShadowMap }}
+      shadows={{ type: THREE.PCFShadowMap }}
       dpr={props.lite ? [1, 1.25] : [1, 1.5]}
-      camera={{ position: [0, 1.45, 7.6], fov: 34, near: 0.1, far: 200 }}
+      camera={{ position: SHOTS[0]!.pos, fov: SHOTS[0]!.fov, near: 0.1, far: 200 }}
       gl={{ antialias: false, stencil: false, toneMapping: THREE.ACESFilmicToneMapping, powerPreference: "high-performance" }}
+      onCreated={({ gl }) => {
+        gl.domElement.addEventListener("webglcontextlost", (e) => {
+          e.preventDefault();
+          onLost?.();
+        });
+      }}
     >
-      <GradientSky />
-      <Lights />
-      <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-        <planeGeometry args={[30, 30]} />
-        <shadowMaterial opacity={0.22} />
-      </mesh>
-      <Rig {...props} />
+      {/* Everything appears together once the character has loaded */}
+      <Suspense fallback={null}>
+        <GradientSky />
+        <Lights />
+        <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+          <planeGeometry args={[30, 30]} />
+          <shadowMaterial opacity={0.22} />
+        </mesh>
+        <Player chapters={props.chapters.length} onReady={props.onReady} />
+        <Rig {...props} />
+      </Suspense>
     </Canvas>
   );
 }
