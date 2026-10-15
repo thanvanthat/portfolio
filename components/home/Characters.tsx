@@ -39,6 +39,8 @@ class CharacterRig {
   private current = "";
   private cueKey = "";
   private look = { x: 0, y: 0 };
+  /** The head's pose from the animation alone, before the cursor turn is added. */
+  private readonly headPose = new THREE.Quaternion();
 
   constructor(
     gltf: GLTF,
@@ -60,6 +62,7 @@ class CharacterRig {
     // A one-off clip hands back to the base loop when it ends
     this.mixer.addEventListener("finished", () => this.fade(this.base));
     this.head = this.findBone(headName);
+    if (this.head) this.headPose.copy(this.head.quaternion);
     this.fade(base, 0);
   }
 
@@ -92,8 +95,13 @@ class CharacterRig {
   }
 
   update(dt: number) {
+    const head = this.head;
+    // Undo last frame's cursor turn first. Clips that key the head overwrite it anyway, but
+    // clips that don't (the player's Idle) would otherwise keep adding turns and spin the head.
+    if (head) head.quaternion.copy(this.headPose);
     this.mixer.update(dt);
-    if (!this.head) return;
+    if (!head) return;
+    this.headPose.copy(head.quaternion);
     // Turn the head toward the cursor on top of whatever the clip is doing
     const k = 1 - Math.pow(0.02, dt);
     this.look.x += (pointer.x - this.look.x) * k;
