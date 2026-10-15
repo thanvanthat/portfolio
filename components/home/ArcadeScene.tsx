@@ -17,7 +17,7 @@ import {
   type ScreenMode,
   type ScreenWork,
 } from "./screen";
-import { Player } from "./Player";
+import { Companion, Player } from "./Characters";
 import { live, pointer, readStage, resetStage, type StageState } from "./stage";
 
 export interface ArcadeSceneProps {
@@ -44,13 +44,13 @@ interface Shot {
 
 /** One shot per stage: hero, the four journey chapters, works, outro. */
 const SHOTS: Shot[] = [
-  { pos: [-0.55, 1.6, 7.6], target: [-0.55, 1.1, 0], fov: 34, bokeh: 2.5 }, // hero: player and cabinet, high in frame
+  { pos: [0, 1.6, 7.6], target: [0, 1.1, 0], fov: 34, bokeh: 2.5 }, // hero: player, cabinet and robot, high in frame
   { pos: [-1.25, 3.05, 3.1], target: [0.7, 2.45, 0.2], fov: 30, bokeh: 6 }, // marquee
   { pos: [-1.15, 2.15, 2.0], target: [0.45, 1.22, 0.55], fov: 30, bokeh: 6 }, // controls
-  { pos: [-0.7, 1.95, 2.55], target: [0.62, 1.8, 0.2], fov: 30, bokeh: 6 }, // screen
+  { pos: [0.1, 1.8, 4.4], target: [2.35, 1.2, 0.5], fov: 34, bokeh: 6 }, // the robot, for the AI chapter
   { pos: [-3.3, 2.25, 4.3], target: [0.95, 1.45, 0], fov: 32, bokeh: 4 }, // three-quarter view
   { pos: [0, 1.86, 2.35], target: [0, 1.83, 0.2], fov: 32, bokeh: 3 }, // works: into the screen
-  { pos: [2.2, 1.5, 7.3], target: [-0.25, 0.88, 0], fov: 34, bokeh: 2.5 }, // outro: high in frame, like the hero
+  { pos: [1.6, 1.5, 7.6], target: [0, 0.88, 0], fov: 34, bokeh: 2.5 }, // outro: all three, high in frame like the hero
 ];
 
 const ease = (t: number) => t * t * (3 - 2 * t);
@@ -537,15 +537,17 @@ function Rig({ chapters, works, name, subtitle, lite }: ArcadeSceneProps) {
     const shot = r.shot;
     sampleShot(s, shot);
     if (size.width < size.height * 1.05) {
-      // Portrait: centre the subject and pull back, further for the close-ups. The wide
-      // opening and closing shots centre on the player and cabinet together.
+      // Portrait: centre the subject and pull back, further for the close-ups and for the
+      // wide opening and closing shots, which have to fit both characters across
       const wide = THREE.MathUtils.clamp(-s, 0, 1) + THREE.MathUtils.clamp(s - (SHOTS.length - 3), 0, 1);
-      shot.target.x = THREE.MathUtils.lerp(shot.target.x * 0.15, -0.62, wide);
       const close = THREE.MathUtils.clamp(1 - Math.abs(s - 1.5) / 2.5, 0, 1);
+      // The robot's shot keeps it centred instead of the cabinet
+      const robot = THREE.MathUtils.clamp(1 - Math.abs(s - 2), 0, 1);
+      shot.target.x = THREE.MathUtils.lerp(shot.target.x * 0.15, 1.5, robot);
       r.v
         .copy(shot.pos)
         .sub(shot.target)
-        .multiplyScalar(1.55 + close * 0.9);
+        .multiplyScalar(1.55 + close * 0.9 + wide * 0.45);
       shot.pos.copy(shot.target).add(r.v);
     }
     const k = 1 - Math.pow(0.08, dt);
@@ -654,6 +656,7 @@ export default function ArcadeScene(props: ArcadeSceneProps) {
           <shadowMaterial opacity={0.22} />
         </mesh>
         <Player chapters={props.chapters.length} onReady={props.onReady} />
+        <Companion chapters={props.chapters.length} />
         <Rig {...props} />
       </Suspense>
     </Canvas>
