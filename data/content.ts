@@ -33,8 +33,8 @@ export const timeline: TimelineEntry[] = [
   {
     chapter: "IV",
     title: "Convergence",
-    body: "Now shipping projects where they meet: Gilli, Fresora and GrantPilot AI are live, alongside adaptive games and interactive web experiences.",
-    tags: ["Fresora", "GrantPilot AI", "BrainVerse AI"],
+    body: "Now shipping projects where they meet: Gilli, FreshCO AI and GrantPilot AI are live, alongside adaptive games and interactive web experiences.",
+    tags: ["FreshCO AI", "GrantPilot AI", "BrainVerse AI"],
   },
 ];
 
@@ -91,10 +91,10 @@ export const aiPipeline: PipelineStep[] = [
 
 export const researchThreads: ResearchThread[] = [
   {
-    title: "Fresora",
+    title: "FreshCO AI",
     status: "Live",
     summary: "Food identification with MobileNetV2 and YOLOX, OpenCV freshness measurement and an explainable score.",
-    slug: "fresora",
+    slug: "freshco-ai",
   },
   {
     title: "GrantPilot AI",

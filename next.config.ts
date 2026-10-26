@@ -26,6 +26,8 @@ const nextConfig: NextConfig = {
         destination: "https://thanvanth.vercel.app/:path*",
         permanent: true,
       },
+      // Fresora was renamed FreshCO AI; keep shared links to the old case study working
+      { source: "/projects/fresora/:rest*", destination: "/projects/freshco-ai/:rest*", permanent: true },
     ];
   },
   async headers() {
