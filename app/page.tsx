@@ -1,37 +1,44 @@
-import { AboutSection } from "@/components/sections/AboutSection";
-import { AISection } from "@/components/sections/AISection";
-import { BrainverseFeature } from "@/components/sections/BrainverseFeature";
-import { ContactSection } from "@/components/sections/ContactSection";
-import { ExperienceSection } from "@/components/sections/ExperienceSection";
-import { FresoraFeature } from "@/components/sections/FresoraFeature";
-import { GrantPilotFeature } from "@/components/sections/GrantPilotFeature";
-import { GameDevSection } from "@/components/sections/GameDevSection";
-import { GilliFeature } from "@/components/sections/GilliFeature";
-import { Hero } from "@/components/sections/Hero";
-import { ProcessSection } from "@/components/sections/ProcessSection";
-import { ProjectShowcase } from "@/components/sections/ProjectShowcase";
-import { SnakesFeature } from "@/components/sections/SnakesFeature";
-import { SkillsSection } from "@/components/sections/SkillsSection";
-import { UnrealSection } from "@/components/sections/UnrealSection";
+import { Cormorant_Upright, Mansalva } from "next/font/google";
+import { aboutIntro, skillGroups, timeline } from "@/data/content";
+import { projects } from "@/data/projects";
+import { site, socials } from "@/data/site";
+import { HomeExperience } from "@/components/home/HomeExperience";
+import { HomeHero } from "@/components/home/HomeHero";
+import { HomeOutro } from "@/components/home/HomeOutro";
+import { Journey } from "@/components/home/Journey";
+import { WorksGallery } from "@/components/home/WorksGallery";
+
+const hand = Mansalva({ weight: "400", subsets: ["latin"], variable: "--font-hand", display: "swap" });
+const serif = Cormorant_Upright({ weight: ["500", "600"], subsets: ["latin"], variable: "--font-serif-up", display: "swap" });
 
 export default function HomePage() {
+  const chapters = timeline.map((t) => ({ numeral: t.chapter, title: t.title, tags: t.tags }));
+  const works = projects.map((p) => ({
+    number: p.number,
+    title: p.title,
+    accent: p.atmosphere.accent,
+    base: p.atmosphere.base,
+    cover: p.screens?.[0]?.src,
+  }));
+
   return (
-    <>
-      <Hero />
-      <AboutSection />
-      <ExperienceSection />
-      <ProjectShowcase />
-      <GameDevSection />
-      <GilliFeature />
-      <SnakesFeature />
-      <UnrealSection />
-      <AISection />
-      <FresoraFeature />
-      <GrantPilotFeature />
-      <BrainverseFeature />
-      <SkillsSection />
-      <ProcessSection />
-      <ContactSection />
-    </>
+    <div className={`${hand.variable} ${serif.variable}`}>
+      <HomeExperience
+        name={site.shortName}
+        subtitle="Game Dev · AI · Worlds"
+        chapters={chapters}
+        works={works}
+        chrome={{
+          bottomLeft: "Games · AI · Worlds",
+          bottomRight: `Portfolio — ${site.year}`,
+          side: site.roles.slice(0, 2).join(" + "),
+        }}
+      >
+        <HomeHero title={`About ${site.shortName}`} role={site.roles.slice(0, 2).join(" & ")} body={aboutIntro} />
+        <Journey entries={timeline} />
+        <WorksGallery projects={projects} />
+        <HomeOutro email={site.email} socials={socials} skills={skillGroups} />
+      </HomeExperience>
+    </div>
   );
 }

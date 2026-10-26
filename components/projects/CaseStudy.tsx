@@ -45,7 +45,7 @@ export function CaseStudy({ project, next }: CaseStudyProps) {
         />
         <div className="relative">
           <div className="label flex flex-wrap items-center justify-between gap-4 text-ash">
-            <Link href="/#projects" className="inline-flex items-center gap-2 transition-colors hover-fine:text-bone">
+            <Link href="/#works" className="inline-flex items-center gap-2 transition-colors hover-fine:text-bone">
               <ArrowLeft className="size-3.5" aria-hidden="true" /> All projects
             </Link>
             <span>

@@ -23,16 +23,18 @@ Project facts (status, engine, technologies, screenshots, live and source links)
 ```
 app/                 routes: home, /projects/[slug] case studies (each with its own share image), OG image, sitemap, robots
 components/
+  home/              the homepage: HomeExperience (fixed 3D scene + overlays), HomeHero, Journey,
+                     WorksGallery, HomeOutro; ArcadeScene + Player (three.js), stage.ts (scroll → camera
+                     stage), screen.ts (the cabinet's CRT and marquee canvases)
   layout/            Navbar, Footer, Loader, CursorInteraction, PageTransition
-  sections/          Hero (+ HeroScene WebGL), About, Experience, ProjectShowcase, GameDev,
-                     Unreal, AI, FresoraFeature, GrantPilotFeature (both built on LiveProjectFeature),
-                     BrainverseFeature, Skills/TechStack, Process, Contact
+  sections/          the previous homepage sections (not mounted; kept for reuse)
   projects/          GameProject, AIProject, ProjectModal, ProjectMeta, CaseStudy, ScreenGallery, ProjectLinks
   visuals/           procedural SVG key art, device frames for real screens, Blueprint graph, adaptive mini-game
   ui/                RevealText, WordReveal, MagneticButton, Pipeline, Marquee, ...
 data/                all portfolio content (typed)
 lib/                 types, hooks, utils, GSAP registration
 public/projects/     real product screenshots (WebP)
+public/models/       player.glb, the homepage character
 styles/globals.css   design tokens (Tailwind @theme) and global styles
 ```
 
@@ -41,5 +43,10 @@ styles/globals.css   design tokens (Tailwind @theme) and global styles
 - **Type:** Archivo in condensed (`wdth 62`) and wide cuts for display, Inter Tight for body, JetBrains Mono for metadata.
 - **Color:** ink, off-white and steel. Each project brings its own accent/atmosphere (`atmosphere` in `data/projects.ts`).
 - **Screens and key art:** projects with `screens` in `data/projects.ts` show real captures in device frames (`ProjectArt`, `DeviceStage`, `ScreenGallery`). The others fall back to procedural SVG key art (`components/visuals/ProjectVisual.tsx`). To add captures, put WebP files in `public/projects/<project>/` and list them under `screens`.
-- **Motion:** everything respects `prefers-reduced-motion`; with reduced motion the Game Dev sequence stacks vertically instead of pinning. The WebGL hero (a particle cloud morphing between a game controller, a brain and a ringed planet, shapes in `components/visuals/morphShapes.ts`) runs on desktop only and loads after first paint. Phones and tablets get a terrain still (`public/hero-terrain.webp`) with a recorded loop of the morph (`public/hero-morph.mp4` / `.webm`) blended on top. GSAP loads lazily.
+- **Homepage scene:** one fixed three.js scene sits behind the scrolling page: a procedural arcade cabinet, the player character and a few floating props on a gradient sky, with depth of field, bloom and film grain. Scrolling moves the camera between fixed shots (`SHOTS` in `components/home/ArcadeScene.tsx`); the shot for each journey chapter is anchored to its `data-stage` entry and rests while you read. The CRT shows eyes that follow the cursor, a card per chapter, the project in view in the works gallery and a closing screen. Clicking the cabinet "presses start". The scene loads after first paint and fades in once ready, switches to a lighter effect chain on phones or when frame time stays above 33 ms, and falls back to the painted sky without WebGL or if the context is lost. With reduced motion the props, buttons and camera sway stay still.
+- **Characters** (`components/home/Characters.tsx`): one for each half of the work, both with heads that turn toward the cursor on top of the playing clip.
+  - `public/models/player.glb` is "Rogue" from KayKit Adventurers by Kay Lousberg ([kaylousberg.com](https://kaylousberg.com), CC0), cut down to the Idle, Interact and Cheer clips with the weapons removed and a 512 px WebP texture (about 190 KB). It idles, cheers on the last chapter and at the end, and reaches for the controls when the cabinet is clicked.
+  - `public/models/companion.glb` is "RobotExpressive" from the three.js examples, by Tomás Laulhé ([Quaternius](https://www.patreon.com/quaternius)) with expressions by Don McCurdy (CC0). It is recoloured to the scene's palette with glowing mint eyes and cut to six clips (about 165 KB). It waves in the hero, gives a thumbs-up in the Intelligence chapter (where the camera turns to it and its eyes pulse), nods at Convergence and dances at the end. Its face uses the model's Surprised and Sad morph targets, and clicking it makes it wave back.
+  - Both files were processed with glTF-Transform (prune, resample, quantize, meshopt compression).
+- **Motion:** everything respects `prefers-reduced-motion`. GSAP loads lazily.
 - **Cursor:** desktop only. Add `data-cursor="hover|view|drag|explore"` (and optionally `data-cursor-label`) to any element.
