@@ -83,9 +83,13 @@ export function Navbar() {
             scrolled || !onHome ? "border-bone/10 bg-ink/70 backdrop-blur-md" : "border-transparent bg-transparent",
           )}
         >
-          <Link href="/" className="label flex items-center gap-3 text-bone" aria-label={`${site.name} — home`}>
-            <span className="grid size-6 place-items-center border border-bone/40 text-[0.6rem]">TA</span>
-            <span className="hidden sm:inline">{site.name}</span>
+          {/* The name stays in the accessible name on phones too, where it is visually hidden */}
+          <Link href="/" className="label flex items-center gap-3 text-bone">
+            <span aria-hidden="true" className="grid size-6 place-items-center border border-bone/40 text-[0.6rem]">
+              TA
+            </span>
+            <span className="sr-only sm:not-sr-only">{site.name}</span>
+            <span className="sr-only"> — home</span>
           </Link>
 
           <ul className="hidden items-center gap-1 lg:flex">

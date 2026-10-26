@@ -173,6 +173,9 @@ export function CaseStudy({ project, next }: CaseStudyProps) {
           </div>
           <div
             data-cursor="drag"
+            role="region"
+            aria-label={`${project.title} visual gallery`}
+            tabIndex={0}
             className="no-scrollbar flex snap-x snap-mandatory gap-4 overflow-x-auto gutter lg:grid lg:grid-cols-12 lg:overflow-visible"
           >
             {(project.gallery ?? []).map((g, i) => (

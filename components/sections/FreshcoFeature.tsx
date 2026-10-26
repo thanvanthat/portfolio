@@ -17,8 +17,8 @@ const FORMULA = `penalty = W_defect   · defect_coverage
 
 score   = round(100 · (1 − clamp(penalty, 0, 1)))`;
 
-/** How Fresora turns pixels into a score: the real formula and status bands. */
-function FresoraScore({ accent }: { accent: string }) {
+/** How FreshCO AI turns pixels into a score: the real formula and status bands. */
+function FreshcoScore({ accent }: { accent: string }) {
   return (
     <div className="grid gap-12 lg:grid-cols-12 lg:items-center">
       <FadeIn className="min-w-0 lg:col-span-5">
@@ -66,8 +66,8 @@ function FresoraScore({ accent }: { accent: string }) {
   );
 }
 
-export function FresoraFeature() {
-  const project = getProject("fresora");
+export function FreshcoFeature() {
+  const project = getProject("freshco-ai");
   if (!project) return null;
   return (
     <LiveProjectFeature
@@ -75,7 +75,7 @@ export function FresoraFeature() {
       index="06.1"
       kicker="Live product · Computer vision"
       pipelineLabel="Scan → rescue"
-      signature={<FresoraScore accent={project.atmosphere.accent} />}
+      signature={<FreshcoScore accent={project.atmosphere.accent} />}
     />
   );
 }

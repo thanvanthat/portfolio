@@ -4,7 +4,7 @@ export type ProjectStatus = "Live" | "In development" | "Prototype" | "Concept p
 
 /** Identifies which procedural artwork renders for a project. */
 export type ProjectVisualKey =
-  "brainverse" | "gilli" | "snakes" | "fresora" | "grantpilot" | "echo" | "ecodash" | "eventplatform";
+  "brainverse" | "gilli" | "snakes" | "freshco" | "grantpilot" | "echo" | "ecodash" | "eventplatform";
 
 export interface ProjectAtmosphere {
   /** Accent color used sparingly for highlights, states and hover. */

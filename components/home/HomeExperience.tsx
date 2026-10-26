@@ -104,7 +104,7 @@ export function HomeExperience({ name, subtitle, chapters, works, chrome, childr
       {scene && !ready && (
         <p
           aria-hidden="true"
-          className="label home-loading pointer-events-none fixed bottom-[calc(var(--gutter)+2.5rem)] left-1/2 z-10 -translate-x-1/2 text-[#f7f2e8]/80"
+          className="label home-loading pointer-events-none fixed bottom-28 left-1/2 z-10 -translate-x-1/2 text-[#f7f2e8]/80"
         >
           Loading world
         </p>

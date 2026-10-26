@@ -31,17 +31,17 @@ export function HomeHero({ title, role, body }: { title: string; role: string; b
         className="pointer-events-none absolute inset-x-0 bottom-0 h-[62%] bg-[linear-gradient(180deg,rgb(16_20_18/0)_0%,rgb(16_20_18/0.42)_70%,rgb(16_20_18/0.55)_100%)]"
         style={{ opacity }}
       />
-      <motion.div style={{ opacity, filter: blur }} className="relative max-w-[44rem]">
+      <motion.div style={{ opacity, filter: blur }} className="relative max-w-[48rem]">
         <motion.h1
           id="home-title"
-          className="font-hand text-[clamp(3.2rem,9vw,7.5rem)] leading-[0.95] text-[#f7f2e8] [text-shadow:0_2px_24px_rgb(20_24_20/0.35)]"
+          className="font-hand text-[clamp(3rem,min(9vw,11svh),7.5rem)] leading-[0.95] text-[#f7f2e8] [text-shadow:0_2px_24px_rgb(20_24_20/0.35)]"
           style={{ y: titleY, letterSpacing: spacing }}
         >
           {title}
           <span className="sr-only"> — {role}</span>
         </motion.h1>
         <motion.p
-          className="font-serif-up mx-auto mt-5 max-w-[38rem] text-[clamp(1.05rem,1.5vw,1.3rem)] leading-relaxed text-[#f7f2e8] [text-shadow:0_1px_14px_rgb(20_24_20/0.45)]"
+          className="font-serif-up mx-auto mt-5 max-w-[44rem] text-[clamp(1.05rem,min(1.5vw,2.3svh),1.3rem)] leading-relaxed text-[#f7f2e8] [text-shadow:0_1px_14px_rgb(20_24_20/0.45)]"
           style={{ y: bodyY }}
         >
           {body}
